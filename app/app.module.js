@@ -8,8 +8,10 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 Object.defineProperty(exports, "__esModule", { value: true });
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
-var forms_1 = require("@angular/forms");
-var app_component_1 = require("./app.component");
+var video_component_1 = require("./video/video.component");
+var video_module_1 = require("./video/video.module");
+var user_role_module_1 = require("./user-role/user-role.module");
+var user_role_component_1 = require("./user-role/user-role.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -17,9 +19,9 @@ var AppModule = (function () {
 }());
 AppModule = __decorate([
     core_1.NgModule({
-        imports: [platform_browser_1.BrowserModule, forms_1.FormsModule],
-        declarations: [app_component_1.AppComponent],
-        bootstrap: [app_component_1.AppComponent]
+        imports: [platform_browser_1.BrowserModule, video_module_1.VideoModule, user_role_module_1.UserRoleModule],
+        bootstrap: [video_component_1.VideoComponent, user_role_component_1.UserRoleComponent],
+        schemas: [core_1.CUSTOM_ELEMENTS_SCHEMA]
     })
 ], AppModule);
 exports.AppModule = AppModule;

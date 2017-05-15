@@ -19,17 +19,25 @@
             '@angular/forms': 'npm:@angular/forms/bundles/forms.umd.js',
             // остальные пакеты
             'rxjs':                      'npm:rxjs',
-            'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js'
+            'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
+            'videogular2': 'npm:videogular2',
+            'socket.io-client': 'npm:socket.io-client/dist/socket.io.js',
         },
         // пакеты, которые указывают загрузчику System, как загружать файлы без имени и расширения
         packages: {
-            app: {
+            'app': {
                 main: './main.js',
                 defaultExtension: 'js'
             },
-            rxjs: {
+            'rxjs': {
                 defaultExtension: 'js'
-            }
+            },
+            'videogular2': {
+                defaultExtension: 'js'
+            },
+            'socket.io-client': {
+                defaultExtension: 'js'
+            },
         }
     });
 })(this);
