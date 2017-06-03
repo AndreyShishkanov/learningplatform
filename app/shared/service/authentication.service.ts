@@ -1,34 +1,26 @@
 import { Injectable } from '@angular/core';
-import IRole from "../classes/role";
 import { Http, Response } from '@angular/http';
-import {Observable} from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/map'
 
 @Injectable()
-export default class AuthenticationService {
-    private _currentRole : IRole;
-    currentRole: Observable<IRole>;
-    private currentRoleObserver: any;
+export class AuthenticationService {
 
-    constructor(private http: Http){
-        this.currentRole = new Observable(observer => {
-            this.currentRoleObserver = observer;
-        });
-        this.getroles().subscribe(x=> {
-            this._currentRole = x[0];
-            this.currentRoleObserver.next(this._currentRole);
-        });
+    constructor() { }
+
+    login(username: string, password: string) {
+        // return this.http.post('/api/authenticate', JSON.stringify({ username: username, password: password }))
+        //     .map((response: Response) => {
+        //         // login successful if there's a jwt token in the response
+        //         let user = response.json();
+        //         if (user && user.token) {
+        //             // store user details and jwt token in local storage to keep user logged in between page refreshes
+        //             localStorage.setItem('currentUser', JSON.stringify(user));
+        //         }
+        //     });
     }
 
-    isTeacher(): boolean {
-        return this._currentRole.hasControlsAccess;
-    }
-
-    getroles() : Observable<IRole[]> {
-        return this.http.get('getRoles').map((response:Response) => response.json());
-    }
-    setCurrentRole(role:IRole){
-        this._currentRole = role;
-        this.currentRoleObserver.next(this._currentRole);
+    logout() {
+        // remove user from local storage to log user out
+        //localStorage.removeItem('currentUser');
     }
 }
