@@ -1,26 +1,47 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { Http } from '@angular/http';
+import { Router } from '@angular/router';
 import 'rxjs/add/operator/map'
+import IRole from "../classes/role";
 
 @Injectable()
 export class AuthenticationService {
+    public token: string;
+    public role: IRole;
 
-    constructor() { }
-
-    login(username: string, password: string) {
-        // return this.http.post('/api/authenticate', JSON.stringify({ username: username, password: password }))
-        //     .map((response: Response) => {
-        //         // login successful if there's a jwt token in the response
-        //         let user = response.json();
-        //         if (user && user.token) {
-        //             // store user details and jwt token in local storage to keep user logged in between page refreshes
-        //             localStorage.setItem('currentUser', JSON.stringify(user));
-        //         }
-        //     });
+    constructor(private http: Http, private router: Router) {
+        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        this.token = currentUser && currentUser.token;
+        this.role = currentUser && currentUser.role;
     }
 
-    logout() {
-        // remove user from local storage to log user out
-        //localStorage.removeItem('currentUser');
+    login(name: string, password: string){
+        this.http.post('/login', { name: name, password: password })
+            .map(res => res.json())
+            .subscribe( data =>  {
+                // login successful if there's a jwt token in the response
+                let token = data && data.token;
+                if (token) {
+                    // set token property
+                    this.token = token;
+                    this.role = data.role;
+
+                    // store username and jwt token in local storage to keep user logged in between page refreshes
+                    localStorage.setItem('currentUser', JSON.stringify({ name: name, token: token, role: data.role }));
+
+                    // return true to indicate successful login
+                    this.router.navigate(['/']);
+                } else {
+                    // return false to indicate failed login
+                }
+            });
+    }
+
+    logout(): void {
+        // clear token remove user from local storage to log user out
+        this.token = null;
+        this.role = null;
+        localStorage.removeItem('currentUser');
+        this.router.navigate(['/login']);
     }
 }

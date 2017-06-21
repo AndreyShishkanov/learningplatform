@@ -1,1 +1,23 @@
-@orange: #f938ab;
+body,html {
+  height: 100%;
+}
+
+/* pad top for the fixed navbar */
+body {
+  padding-top: 56px;
+}
+
+/* fixed and fluid on sm and up */
+@media (min-width: 768px) {
+  .fixed {
+    flex: 0 0 180px;
+    min-width: 180px;
+  }
+}
+
+.col.fluid {
+  min-height: 100%;
+}
+button, a{
+  cursor: pointer;
+}

@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./app.js"
   },
   "dependencies": {
     "@angular/common": "",
@@ -15,24 +15,22 @@
     "@angular/platform-browser-dynamic": "",
     "@angular/router": "",
 
-    "angular-in-memory-web-api": "",
     "systemjs": "",
     "core-js": "",
     "rxjs": "",
     "zone.js": "",
     "mongoose": "",
-    "connect-flash": "",
     "body-parser": "",
     "cookie-parser": "",
     "debug": "",
     "express": "",
-    "express-session": "",
-    "bcrypt-nodejs": "",
-    "ejs": "",
     "morgan": "",
-    "serve-favicon": "",
     "socket.io":"",
-    "videogular2": ""
+    "videogular2": "",
+    "jsonwebtoken": "",
+    "passport": "",
+    "passport-jwt": "",
+    "password-hash": ""
   },
   "devDependencies": {
     "@types/node": "",

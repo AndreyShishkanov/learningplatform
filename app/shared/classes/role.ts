@@ -1,6 +1,6 @@
 interface IRole {
     name: string;
-    hasControlsAccess: boolean;
+    hasControlAccess: boolean;
 }
 
 export default IRole;

@@ -1,42 +1,33 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from '../shared/service/authentication.service';
 
 @Component({
-    moduleId: module.id,
-    templateUrl: 'app/login/login.component.html'
+    templateUrl: 'app/login/login.component.html',
+    selector: 'login',
 })
 
-export class LoginComponent implements OnInit {
-    model: any = {};
-    loading = false;
-    returnUrl: string;
+export class LoginComponent implements OnInit{
+    public showLogoutButton : boolean;
 
-    constructor(
-        private route: ActivatedRoute,
-        private router: Router,
-        private authenticationService: AuthenticationService,
-        //private alertService: AlertService
-    ) { }
+    constructor( private authenticationService: AuthenticationService) { }
 
-    ngOnInit() {
-        // // reset login status
-        // this.authenticationService.logout();
-        //
-        // // get return url from route parameters or default to '/'
-        // this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    ngOnInit () {
+        this.showLogoutButton = this.authenticationService.token != null;
     }
 
-    login() {
-        // this.loading = true;
-        // this.authenticationService.login(this.model.username, this.model.password)
-        //     .subscribe(
-        //         data => {
-        //             this.router.navigate([this.returnUrl]);
-        //         },
-        //         error => {
-        //             //this.alertService.error(error);
-        //             this.loading = false;
-        //         });
+    logout() {
+        this.authenticationService.logout();
+    }
+}
+
+@Component({
+    templateUrl: 'app/login/login.form.html'
+})
+
+export class LoginForm {
+    constructor( private authenticationService: AuthenticationService) { }
+
+    login(name: string, password: string) {
+        this.authenticationService.login(name, password);
     }
 }

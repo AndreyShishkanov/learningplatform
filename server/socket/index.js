@@ -1,5 +1,3 @@
-var app = require('../app');
-
 module.exports = function (server) {
     var io = require('socket.io').listen(server);
 
@@ -17,5 +15,4 @@ module.exports = function (server) {
             io.emit('setTime', time);
         });
     });
-
 }

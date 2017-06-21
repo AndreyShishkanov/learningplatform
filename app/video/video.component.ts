@@ -17,22 +17,18 @@ export class VideoComponent {
 
     constructor(private authenticationService: AuthenticationService) {
         this.socket = io();
+        this.currentRole = this.authenticationService.role;
     }
 
     onPlayerReady(api:VgAPI) {
         this.api = api;
-        // this.authenticationService.currentRole.subscribe((role:IRole) => {
-        //     this.currentRole = role;
-        //     this.defineControls();
-        // });
-    }
-    defineControls(){
+
         this.api.getDefaultMedia().subscriptions.ended.subscribe(
             () => {
                 this.api.getDefaultMedia().currentTime = 0;
             }
         );
-        if(!this.currentRole.hasControlsAccess){
+        if(this.currentRole.hasControlAccess){
             this.api.getDefaultMedia().subscriptions.playing.subscribe(
                 () => {
                     this.socket.emit('play');
@@ -45,7 +41,7 @@ export class VideoComponent {
             );
             this.api.getDefaultMedia().subscriptions.seeked.subscribe(
                 () => {
-                    this.socket.emit('setTime');
+                    this.socket.emit('setTime', this.api.getDefaultMedia().currentTime);
                 }
             );
         }else{
