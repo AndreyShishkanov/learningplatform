@@ -2,46 +2,42 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Router } from '@angular/router';
 import 'rxjs/add/operator/map'
-import IRole from "../classes/role";
+import { User }from "../classes/user";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class AuthenticationService {
-    public token: string;
-    public role: IRole;
+    currentUser : User;
 
     constructor(private http: Http, private router: Router) {
-        var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-        this.token = currentUser && currentUser.token;
-        this.role = currentUser && currentUser.role;
+        if(!this.currentUser) {
+            this.getCurrentUser().subscribe((user : User) =>  {
+                this.currentUser = user;
+                this.router.navigate(['/']);
+            });
+        }
     }
 
     login(name: string, password: string){
         this.http.post('/login', { name: name, password: password })
             .map(res => res.json())
-            .subscribe( data =>  {
-                // login successful if there's a jwt token in the response
-                let token = data && data.token;
-                if (token) {
-                    // set token property
-                    this.token = token;
-                    this.role = data.role;
-
-                    // store username and jwt token in local storage to keep user logged in between page refreshes
-                    localStorage.setItem('currentUser', JSON.stringify({ name: name, token: token, role: data.role }));
-
-                    // return true to indicate successful login
-                    this.router.navigate(['/']);
+            .subscribe( (response : {success: boolean, message: string, user: User}) =>  {
+                if (response.success === true) {
+                    this.currentUser = response.user;
+                    this.router.navigate(['']);
                 } else {
-                    // return false to indicate failed login
+                    alert(response.message);
                 }
             });
     }
 
     logout(): void {
-        // clear token remove user from local storage to log user out
-        this.token = null;
-        this.role = null;
-        localStorage.removeItem('currentUser');
-        this.router.navigate(['/login']);
+        this.http.post('/logout', { }).subscribe(()=>{
+            this.router.navigate(['/login']);
+        });
+    }
+
+    getCurrentUser(): Observable<User>{
+        return this.http.post('/currentUser', { }).map(res => res.json());
     }
 }

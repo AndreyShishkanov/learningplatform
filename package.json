@@ -1,5 +1,5 @@
 {
-  "name": "presentation",
+  "name": "learn-platform",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -14,7 +14,6 @@
     "@angular/platform-browser": "",
     "@angular/platform-browser-dynamic": "",
     "@angular/router": "",
-
     "systemjs": "",
     "core-js": "",
     "rxjs": "",
@@ -22,19 +21,22 @@
     "mongoose": "",
     "body-parser": "",
     "cookie-parser": "",
+    "serve-favicon": "",
     "debug": "",
     "express": "",
     "morgan": "",
-    "socket.io":"",
+    "socket.io": "",
     "videogular2": "",
-    "jsonwebtoken": "",
+    "express-session": "",
     "passport": "",
-    "passport-jwt": "",
-    "password-hash": ""
+    "passport-local": "",
+    "password-hash": "",
+    "connect-flash": "",
+    "connect-mongo": ""
   },
   "devDependencies": {
     "@types/node": "",
-    "@types/core-js":"",
+    "@types/core-js": "",
     "@types/socket.io-client": "",
     "typescript": ""
   }

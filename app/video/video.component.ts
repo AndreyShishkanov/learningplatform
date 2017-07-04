@@ -2,22 +2,21 @@ import { Component } from '@angular/core';
 import {VgAPI} from 'videogular2/core';
 import {Observable} from 'rxjs/Observable';
 import * as io from 'socket.io-client';
-import IRole from "../shared/classes/role";
 import {AuthenticationService} from "../shared/service/authentication.service";
+import {Role, User} from "../shared/classes/user";
 
 @Component({
     selector: 'video-app',
     templateUrl: 'app/video/video.html',
-    providers:[AuthenticationService]
 })
 export class VideoComponent {
     api:VgAPI;
     socket:any;
-    currentRole: IRole;
+    currentRole: Role;
 
     constructor(private authenticationService: AuthenticationService) {
         this.socket = io();
-        this.currentRole = this.authenticationService.role;
+        this.currentRole = this.authenticationService.currentUser.role;
     }
 
     onPlayerReady(api:VgAPI) {

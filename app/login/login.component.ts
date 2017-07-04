@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { AuthenticationService } from '../shared/service/authentication.service';
 
 @Component({
@@ -6,14 +6,9 @@ import { AuthenticationService } from '../shared/service/authentication.service'
     selector: 'login',
 })
 
-export class LoginComponent implements OnInit{
-    public showLogoutButton : boolean;
+export class LoginComponent{
 
     constructor( private authenticationService: AuthenticationService) { }
-
-    ngOnInit () {
-        this.showLogoutButton = this.authenticationService.token != null;
-    }
 
     logout() {
         this.authenticationService.logout();
@@ -21,7 +16,7 @@ export class LoginComponent implements OnInit{
 }
 
 @Component({
-    templateUrl: 'app/login/login.form.html'
+    templateUrl: 'app/login/login.form.html',
 })
 
 export class LoginForm {

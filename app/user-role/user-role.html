@@ -1,8 +1,0 @@
-<ul class="nav navbar-nav navbar-right">
-    <li class="dropdown">
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#" id="download">Role: {{currentRole?.name}} <span class="caret"></span></a>
-        <ul class="dropdown-menu" aria-labelledby="download">
-            <li *ngFor="let role of roles" (click)="authenticationService.setCurrentRole(role)"><a href="#">{{role.name}} <span [ngClass]="{'glyphicon-ok':currentRole?.name == role.name}" class="glyphicon"></span></a></li>
-        </ul>
-    </li>
-</ul>
