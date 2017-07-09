@@ -14,30 +14,30 @@
     "@angular/platform-browser": "",
     "@angular/platform-browser-dynamic": "",
     "@angular/router": "",
-    "systemjs": "",
-    "core-js": "",
-    "rxjs": "",
-    "zone.js": "",
-    "mongoose": "",
     "body-parser": "",
+    "connect-flash": "",
+    "connect-mongo": "",
     "cookie-parser": "",
-    "serve-favicon": "",
+    "core-js": "",
     "debug": "",
     "express": "",
-    "morgan": "",
-    "socket.io": "",
-    "videogular2": "",
     "express-session": "",
+    "mongoose": "",
+    "morgan": "",
     "passport": "",
     "passport-local": "",
     "password-hash": "",
-    "connect-flash": "",
-    "connect-mongo": ""
+    "serve-favicon": "",
+    "socket.io": "",
+    "systemjs": "",
+    "videogular2": "",
+    "zone.js": "",
+    "rxjs": "^5.4.2"
   },
   "devDependencies": {
     "@types/node": "",
     "@types/core-js": "",
     "@types/socket.io-client": "",
-    "typescript": ""
+    "typescript": "^2.4.1"
   }
 }

@@ -9,6 +9,6 @@ export class HomeComponent {
     public name : string;
 
     constructor(private authenticationService : AuthenticationService) {
-        this.name = this.authenticationService.currentUser.name;
+        this.name = this.authenticationService.currentUser? this.authenticationService.currentUser.name : null;
     }
 }

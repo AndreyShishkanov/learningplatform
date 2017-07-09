@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Http } from '@angular/http';
+import { Http, Response } from '@angular/http';
 import { Router } from '@angular/router';
-import 'rxjs/add/operator/map'
 import { User }from "../classes/user";
-import {Observable} from "rxjs";
+import 'rxjs/add/operator/map'
+import 'rxjs/add/observable/of';
+import { Observable } from 'rxjs/Rx';
 
 @Injectable()
 export class AuthenticationService {
@@ -11,9 +12,8 @@ export class AuthenticationService {
 
     constructor(private http: Http, private router: Router) {
         if(!this.currentUser) {
-            this.getCurrentUser().subscribe((user : User) =>  {
-                this.currentUser = user;
-                this.router.navigate(['/']);
+            this.getCurrentUser().subscribe((user: User) => {
+                    this.currentUser = user;
             });
         }
     }
@@ -33,11 +33,25 @@ export class AuthenticationService {
 
     logout(): void {
         this.http.post('/logout', { }).subscribe(()=>{
+            this.currentUser = null;
             this.router.navigate(['/login']);
         });
     }
 
     getCurrentUser(): Observable<User>{
-        return this.http.post('/currentUser', { }).map(res => res.json());
+        return this.http.post('/currentUser', { }).map(
+            (res : Response) => {
+                return res.text() ? res.json() : null;
+            });
+    }
+    isAuthorizated(): Observable<boolean>{
+        if(this.currentUser){
+            return Observable.of(this.currentUser != null);
+        }else {
+            return this.http.post('/isAuthorizated', {}).map(
+                (res: Response) => {
+                    return res.json();
+                });
+        }
     }
 }

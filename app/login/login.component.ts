@@ -6,7 +6,7 @@ import { AuthenticationService } from '../shared/service/authentication.service'
     selector: 'login',
 })
 
-export class LoginComponent{
+export class LogoutComponent{
 
     constructor( private authenticationService: AuthenticationService) { }
 
@@ -19,7 +19,7 @@ export class LoginComponent{
     templateUrl: 'app/login/login.form.html',
 })
 
-export class LoginForm {
+export class LoginComponent {
     constructor( private authenticationService: AuthenticationService) { }
 
     login(name: string, password: string) {

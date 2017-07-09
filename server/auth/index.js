@@ -19,7 +19,6 @@ module.exports = function(app, passport){
                         if(err){
                             next(err)
                         }else{
-                            //res.cookie('user', user, { expires: new Date(Date.now() + 1000*60*60*24), httpOnly: false });
                             res.json({success: true, message: null, user: user});
                         };
                     })
@@ -34,7 +33,10 @@ module.exports = function(app, passport){
     });
 
     app.post('/currentUser', (req, res) => {
-        res.json(req.user);
+            res.json(req.user);
+    });
+    app.post('/isAuthorizated', (req, res) => {
+        res.json(typeof req.user !== 'undefined');
     });
 };
 
