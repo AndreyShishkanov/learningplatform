@@ -4,6 +4,7 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
+const fileUpload = require('express-fileupload');
 const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
@@ -18,16 +19,20 @@ const db = require('./db');
 const app = express();
 const server = require('http').Server(app);
 
+require('./db/starter-migration')();
+
 const port = process.env.PORT || 5000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/app', express.static(path.join(__dirname, 'app')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/files', express.static(path.join(__dirname, 'files_storage')));
 app.use(favicon(__dirname + '/public/images/favicon.ico'));
 
 require('./server/auth/passport')(passport);
 
+app.use(fileUpload());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -36,7 +41,7 @@ app.use(session({
     secret: config.secret,
     resave: false,
     saveUninitialized: false,
-    cookie: {maxAge: 1000*60*60*24*7, httpOnly: false},
+    cookie: {maxAge: 1000*60*60*24, httpOnly: true},
     store: new mongoStore({
         mongooseConnection: mongoose.connection,
         collection: 'sessions' // default
@@ -47,7 +52,9 @@ app.use(passport.session());
 app.use(flash());
 
 require('./server/auth')(app, passport);
+require('./server/video')(app, __dirname);
 require('./server/socket')(server);
+require('./server/data')(app);
 
 app.all('*', function (req, res) {
     res.sendFile(path.resolve('app/index.html'));

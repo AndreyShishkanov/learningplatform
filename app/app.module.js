@@ -20,8 +20,11 @@ var forms_1 = require("@angular/forms");
 var http_1 = require("@angular/http");
 var authentication_service_1 = require("./shared/service/authentication.service");
 var video_component_1 = require("./video/video.component");
+var file_upload_service_1 = require("./shared/service/file-upload.service");
+var forms_2 = require("@angular/forms");
 var appRoutes = [
     { path: 'login', component: login_component_1.LoginComponent },
+    { path: 'registration', component: login_component_1.RegistrationComponent },
     { path: 'video', component: video_component_1.VideoComponent, canActivate: [authentication_guard_1.AuthGuard] },
     { path: '', component: home_component_1.HomeComponent, canActivate: [authentication_guard_1.AuthGuard] },
     { path: '**', component: not_found_component_1.PageNotFoundComponent, canActivate: [authentication_guard_1.AuthGuard] }
@@ -31,11 +34,11 @@ var AppModule = (function () {
     }
     AppModule = __decorate([
         core_1.NgModule({
-            imports: [platform_browser_1.BrowserModule, video_module_1.VideoModule, forms_1.FormsModule, http_1.HttpModule, home_module_1.HomeModule, router_1.RouterModule.forRoot(appRoutes)],
+            imports: [platform_browser_1.BrowserModule, video_module_1.VideoModule, forms_1.FormsModule, http_1.HttpModule, home_module_1.HomeModule, forms_2.ReactiveFormsModule, router_1.RouterModule.forRoot(appRoutes)],
             bootstrap: [app_component_1.AppComponent],
-            declarations: [app_component_1.AppComponent, not_found_component_1.PageNotFoundComponent, login_component_1.LoginComponent, login_component_1.LogoutComponent],
+            declarations: [app_component_1.AppComponent, not_found_component_1.PageNotFoundComponent, login_component_1.LoginComponent, login_component_1.LogoutComponent, login_component_1.RegistrationComponent],
             schemas: [core_1.CUSTOM_ELEMENTS_SCHEMA],
-            providers: [authentication_service_1.AuthenticationService, authentication_guard_1.AuthGuard]
+            providers: [authentication_service_1.AuthenticationService, authentication_guard_1.AuthGuard, file_upload_service_1.FilesUploadService]
         })
     ], AppModule);
     return AppModule;

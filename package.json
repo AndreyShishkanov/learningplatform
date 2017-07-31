@@ -32,7 +32,8 @@
     "systemjs": "",
     "videogular2": "",
     "zone.js": "",
-    "rxjs": "^5.4.2"
+    "rxjs": "^5.4.2",
+    "express-fileupload": ""
   },
   "devDependencies": {
     "@types/node": "",

@@ -9,19 +9,56 @@ module.exports = function(app, passport){
     });
 
     app.post('/login', (req, res, next) => {
-        passport.authenticate('local',
-            (err, user) => {
+        passport.authenticate('login',
+            (err, user, result) => {
                 if (err) throw err;
                 if (!user) {
-                    res.json({success: false, message: 'Authentication failed. User not found.'});
+                    res.json({success: false, message: result.message, field: result.field});
                 }else{
                     req.logIn(user, err => {
                         if(err){
                             next(err)
                         }else{
                             res.json({success: true, message: null, user: user});
-                        };
+                        }
                     })
+                }
+            }
+        )(req, res, next);
+    });
+
+    app.post('/signup', (req, res, next) => {
+        passport.authenticate('signup',
+            (err, user, result) => {
+                if (err) throw err;
+                if (!user) {
+                    res.json({success: false, message: result.message, field: result.field});
+                }else{
+                    Role.findOne({ name : "Student"}, function(err,role) {
+                        if(err) {
+                            return done(err);
+                        }else {
+                            if(role){
+
+                                user.role = role;
+
+                                user.save(function (err) {
+                                    if (err) throw err;
+
+                                    req.logIn(user, err => {
+                                        if (err) {
+                                            next(err)
+                                        } else {
+                                            res.json({success: true, message: null, user: user});
+                                        }
+                                    })
+                                });
+                            }
+                            else{
+                                res.json({success: false, message: 'Required field.', field: 'role'});
+                            }
+                        }
+                    });
                 }
             }
         )(req, res, next);

@@ -31,6 +31,19 @@ export class AuthenticationService {
             });
     }
 
+    signUp(name: string, password: string){
+        this.http.post('/signup', { name: name, password: password })
+            .map(res => res.json())
+            .subscribe( (response : {success: boolean, message: string, user: User}) =>  {
+                if (response.success === true) {
+                    this.currentUser = response.user;
+                    this.router.navigate(['']);
+                } else {
+                    alert(response.message);
+                }
+            });
+    }
+
     logout(): void {
         this.http.post('/logout', { }).subscribe(()=>{
             this.currentUser = null;

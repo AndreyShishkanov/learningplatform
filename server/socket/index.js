@@ -11,5 +11,8 @@ module.exports = function (server) {
         socket.on('setTime', function (time) {
             io.emit('setTime', time);
         });
+        socket.on('rateChange', function (time) {
+            io.emit('rateChange', time);
+        });
     });
 }
