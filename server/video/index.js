@@ -10,15 +10,18 @@ module.exports = function(app, rootPath){
         file.mv(rootPath + '/files_storage/' + file.name, function(err) {
             if (err) return res.status(500).send(err);
 
-            let attachment = new Attachment({
-                name: file.name,
-                href: '/files/' + file.name,
-                type: file.mimetype,
-                selected: false
-            });
-            attachment.save(function(err) {
-                if (err) throw err;
-                res.json('File uploaded!');
+            unselectAllMedia(() => {
+                let attachment = new Attachment({
+                    name: file.name,
+                    href: '/files/' + file.name,
+                    type: file.mimetype,
+                    selected: true
+                });
+
+                attachment.save(function(err) {
+                    if (err) throw err;
+                    res.json('File uploaded!');
+                });
             });
         });
     });
@@ -31,19 +34,23 @@ module.exports = function(app, rootPath){
         });
     });
     app.post('/setCurrentMedia', function(req, res) {
-        Attachment.update({selected: true},{selected: false},{multi: true}, function (err, raw) {
-            if (err) return handleError(err);
-            console.log('The raw response from Mongo was ', raw);
-        });
-        Attachment.findById(req.body.attachment._id, function(err, doc){
-            if(err) res.send(err);
-                doc.selected = true;
-                doc.save(function(err) {
-                    if (err)
-                        console.log('error')
-                    else
-                        console.log('success')
-                });
+        unselectAllMedia(() => {
+            Attachment.findById(req.body.attachment._id, function(err, doc){
+                if(err) res.send(err);
+                    doc.selected = true;
+                    doc.save(function(err) {
+                        if (err)
+                            console.log('error')
+                        else
+                            console.log('success')
+                    });
+            });
         });
     });
+    function unselectAllMedia(callback) {
+        Attachment.update({selected: true},{selected: false},{multi: true}, function (err, raw) {
+            if (err) return handleError(err);
+            callback();
+        });
+    }
 };
