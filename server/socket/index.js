@@ -1,5 +1,7 @@
 module.exports = function (server) {
-    var io = require('socket.io').listen(server);
+    const io = require('socket.io').listen(server);
+
+    let word = "";
 
     io.on('connection', function (socket) {
         socket.on('play', function (time) {
@@ -14,5 +16,7 @@ module.exports = function (server) {
         socket.on('rateChange', function (time) {
             io.emit('rateChange', time);
         });
+
+
     });
 }
