@@ -5,8 +5,8 @@ import {Role} from "../shared/classes/user";
 import { Http, Response } from '@angular/http';
 
 @Component({
-    templateUrl: 'app/login/login.component.html',
-    selector: 'login',
+    templateUrl: 'app/login/logout.component.html',
+    selector: 'logout',
 })
 
 export class LogoutComponent{

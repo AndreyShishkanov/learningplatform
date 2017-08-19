@@ -51,9 +51,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+const io = require('socket.io').listen(server);
+
 require('./server/auth')(app, passport);
-require('./server/video')(app, __dirname);
-require('./server/socket')(server);
+require('./server/video')(app, io, __dirname);
+require('./server/explaining')(app, io);
 require('./server/data')(app);
 
 app.all('*', function (req, res) {

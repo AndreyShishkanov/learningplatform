@@ -1,36 +1,39 @@
-<nav id="topNav" class="navbar navbar-toggleable-md navbar-inverse bg-primary fixed-top">
-    <button class="navbar-toggler navbar-toggler-right py-2" type="button" data-toggle="collapse" data-target="#collapsingNavbar">
-        ☰
-    </button>
+<nav id="topNav" class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
     <a class="navbar-brand" routerLink="">Learn-Platfom</a>
-    <div class="collapse navbar-collapse" id="collapsingNavbar">
-        <ul class="nav navbar-nav">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <!--<li class="nav-item active">-->
+                <!--<a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>-->
+            <!--</li>-->
             <!--<li class="nav-item">-->
-            <!--<a class="nav-link" href="#">Link</a>-->
+                <!--<a class="nav-link" href="#">Link</a>-->
+            <!--</li>-->
+            <!--<li class="nav-item">-->
+                <!--<a class="nav-link disabled" href="#">Disabled</a>-->
             <!--</li>-->
         </ul>
         <ul class="nav navbar-nav ml-auto">
             <li class="nav-item">
-                <login></login>
+                <logout></logout>
             </li>
         </ul>
     </div>
 </nav>
-<div class="container-fluid h-100">
-    <div class="row h-100">
-        <!-- left sidebar -->
-        <div class="col-sm-2 fixed pl-0 py-3">
-            <h5 class="ml-3 hidden-sm-down text-muted">Menu</h5>
-            <ul class="nav flex-sm-column justify-content-center">
-                <li class="nav-item">
-                    <a class="nav-link" routerLink="/video">Video</a>
-                    <a class="nav-link" routerLink="/explaining">Explaining</a>
+<div class="container-fluid">
+    <div class="row">
+        <nav class="col-sm-1 d-none d-sm-block bg-light sidebar">
+            <ul class="nav nav-pills flex-column">
+                <li class="nav-item text-center">
+                    <a class="nav-link" routerLink="/video"><i class="fa fa-video-camera fa-2" aria-hidden="true"></i></a>
+                    <a class="nav-link" routerLink="/explaining"><i class="fa fa-commenting fa-2" aria-hidden="true"></i></a>
                 </li>
             </ul>
-        </div>
-        <!-- center content -->
-        <div class="col fluid bg-faded py-3">
+        </nav>
+        <main class="col-sm-11 ml-sm-auto pt-3" role="main">
             <router-outlet></router-outlet>
-        </div>
+        </main>
     </div>
 </div>

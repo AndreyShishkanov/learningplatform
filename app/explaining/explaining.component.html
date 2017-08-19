@@ -1,14 +1,20 @@
 <div class="row">
-<div class="col-xl-6">
-    <div class="form-group has-success">
-        <label class="form-control-label" for="inputSuccess1">Input answer</label>
-        <input type="text" class="form-control form-control-success" id="inputSuccess1">
-        <div class="form-control-feedback">Success! You've done it.</div>
+    <div class="col-xl-6">
+        <div class="form-group has-success">
+            <label class="form-control-label" for="inputSuccess1">Input answer</label>
+            <input type="text" class="form-control form-control-success" id="inputSuccess1">
+            <div class="form-control-feedback">Success! You've done it.</div>
+        </div>
     </div>
-</div>
-<div class="col-xl-5">
-    <ul class="list-group">
-        <li class="list-group-item">Cras justo odio</li>
-    </ul>
-</div>
+    <div class="col-xl-6">
+        <div class="card">
+            <ul class="list-group list-group-flush" *ngFor="let word of words; let i = index">
+                <li class="list-group-item d-flex justify-content-between">{{word}}<i class="fa fa-times fa-1" aria-hidden="true" (click)="deleteWord(i)"></i></li>
+            </ul>
+        </div>
+        <div class="form-group">
+            <input type="text" class="form-control" id="addWord" name="newWord" [(ngModel)]="newWord" placeholder="add new word">
+            <button class="btn btn-primary" (click)="addWord(newWord)">Add word</button>
+        </div>
+    </div>
 </div>

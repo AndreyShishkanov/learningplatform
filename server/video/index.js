@@ -1,6 +1,22 @@
 const Attachment = require('../../db/models/attachment');
 
-module.exports = function(app, rootPath){
+module.exports = function(app, io, rootPath){
+
+    io.on('connection', function (socket) {
+        socket.on('play', function (time) {
+            io.emit('play', time);
+        });
+        socket.on('pause', function (time) {
+            io.emit('pause', time);
+        });
+        socket.on('setTime', function (time) {
+            io.emit('setTime', time);
+        });
+        socket.on('rateChange', function (time) {
+            io.emit('rateChange', time);
+        });
+    });
+
     app.post('/upload', function(req, res) {
         if (!req.files)
             return res.status(400).send('No files were uploaded.');
