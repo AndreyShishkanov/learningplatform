@@ -5,6 +5,8 @@ import { User }from "../classes/user";
 import 'rxjs/add/operator/map'
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Rx';
+import {ServerResponse} from "../classes/serverResult";
+import {FormGroup} from "@angular/forms";
 
 @Injectable()
 export class AuthenticationService {
@@ -18,30 +20,30 @@ export class AuthenticationService {
         }
     }
 
-    login(name: string, password: string){
-        this.http.post('/login', { name: name, password: password })
-            .map(res => res.json())
-            .subscribe( (response : {success: boolean, message: string, user: User}) =>  {
-                if (response.success === true) {
-                    this.currentUser = response.user;
-                    this.router.navigate(['']);
-                } else {
-                    alert(response.message);
-                }
+    login(form : FormGroup) {
+            this.http.post('/login', {name: form.controls['name'].value, password: form.controls['password'].value})
+                .map(res => res.json())
+                .subscribe((response: ServerResponse) => {
+                    if (response.success === true) {
+                        this.currentUser = response.user;
+                        this.router.navigate(['']);
+                    }else{
+                        form.controls[response.field].setErrors({[response.message]:true});
+                    }
             });
     }
 
-    signUp(name: string, password: string){
+    signUp(name: string, password: string) : ServerResponse {
         this.http.post('/signup', { name: name, password: password })
             .map(res => res.json())
-            .subscribe( (response : {success: boolean, message: string, user: User}) =>  {
+            .subscribe( (response : ServerResponse) =>  {
                 if (response.success === true) {
                     this.currentUser = response.user;
                     this.router.navigate(['']);
-                } else {
-                    alert(response.message);
                 }
+                return response;
             });
+        return;
     }
 
     logout(): void {

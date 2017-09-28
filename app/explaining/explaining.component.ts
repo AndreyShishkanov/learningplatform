@@ -4,6 +4,7 @@ import {User} from "../shared/classes/user";
 import {Http} from "@angular/http";
 import {Observable} from 'rxjs/Observable';
 import * as io from 'socket.io-client';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'explaining',
@@ -12,13 +13,18 @@ import * as io from 'socket.io-client';
 export class ExplainingComponent {
     public user : User;
     public newWord: string;
+    form : FormGroup;
     public words : string[];
     socket:any;
 
-    constructor(private authenticationService : AuthenticationService, private http: Http) {
+    constructor(private authenticationService : AuthenticationService, private http: Http, private fb: FormBuilder) {
         this.socket = io();
         this.user = this.authenticationService.currentUser;
         this.getWords();
+
+        this.form = this.fb.group({
+            'newWord': ["", Validators.required]
+        });
 
         let playObservable = new Observable(observer => {
             this.socket.on('refreshWords', (data: any) => observer.next(data));

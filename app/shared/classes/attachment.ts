@@ -5,4 +5,3 @@ export class Attachment {
     href: string;
     selected: boolean;
 }
-

@@ -58,3 +58,6 @@ button, a{
     overflow-y: auto;
     border-right: 1px solid #eee;
 }
+.invalid-feedback{
+    display: block;
+}

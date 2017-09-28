@@ -3,6 +3,7 @@ import { AuthenticationService } from '../shared/service/authentication.service'
 import {FormGroup, Validators, FormControl, FormBuilder} from '@angular/forms';
 import {Role} from "../shared/classes/user";
 import { Http, Response } from '@angular/http';
+import {ServerResponse} from "../shared/classes/serverResult";
 
 @Component({
     templateUrl: 'app/login/logout.component.html',
@@ -22,11 +23,21 @@ export class LogoutComponent{
     templateUrl: 'app/login/login.form.html',
 })
 
-export class LoginComponent {
-    constructor( private authenticationService: AuthenticationService) { }
+export class LoginComponent implements OnInit {
 
-    login(name: string, password: string) {
-        this.authenticationService.login(name, password);
+    form : FormGroup;
+
+    constructor( private authenticationService: AuthenticationService, private fb: FormBuilder) { }
+
+    ngOnInit() {
+        this.form = this.fb.group({
+                'name': ["", Validators.required],
+                'password': ["", Validators.required]
+            });
+    }
+
+    login():any {
+        if(this.form.valid) this.authenticationService.login(this.form);
     }
 }
 

@@ -16,6 +16,7 @@ import { FilesUploadService } from "./shared/service/file-upload.service";
 import { ReactiveFormsModule } from '@angular/forms';
 import {ExplainingComponent} from "./explaining/explaining.component";
 import {ExplainingModule} from "./explaining/explaining.module";
+import {ControlMessages, ValidationService} from "./shared/service/validation.service";
 
 
 const appRoutes: Routes =[
@@ -30,8 +31,8 @@ const appRoutes: Routes =[
 @NgModule({
     imports:      [ BrowserModule, VideoModule, ExplainingModule, FormsModule, HttpModule, HomeModule, ReactiveFormsModule, RouterModule.forRoot(appRoutes)],
     bootstrap:    [ AppComponent ],
-    declarations: [ AppComponent, PageNotFoundComponent, LoginComponent, LogoutComponent, RegistrationComponent ],
+    declarations: [ AppComponent, PageNotFoundComponent, LoginComponent, LogoutComponent, RegistrationComponent, ControlMessages ],
     schemas:      [ CUSTOM_ELEMENTS_SCHEMA ],
-    providers:    [ AuthenticationService, AuthGuard, FilesUploadService ]
+    providers:    [ AuthenticationService, AuthGuard, FilesUploadService, ValidationService ]
 })
 export class AppModule { }

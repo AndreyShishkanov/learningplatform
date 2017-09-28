@@ -9,4 +9,3 @@ export class Role {
     name: string;
     hasControlAccess: boolean;
 }
-
