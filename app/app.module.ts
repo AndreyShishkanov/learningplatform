@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
 import { VideoModule } from "./video/video.module";
@@ -32,7 +32,6 @@ const appRoutes: Routes =[
     imports:      [ BrowserModule, VideoModule, ExplainingModule, FormsModule, HttpModule, HomeModule, ReactiveFormsModule, RouterModule.forRoot(appRoutes)],
     bootstrap:    [ AppComponent ],
     declarations: [ AppComponent, PageNotFoundComponent, LoginComponent, LogoutComponent, RegistrationComponent, ControlMessages ],
-    schemas:      [ CUSTOM_ELEMENTS_SCHEMA ],
     providers:    [ AuthenticationService, AuthGuard, FilesUploadService, ValidationService ]
 })
 export class AppModule { }

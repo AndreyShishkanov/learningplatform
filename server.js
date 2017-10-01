@@ -9,12 +9,18 @@ const passport = require('passport');
 const flash = require('connect-flash');
 const session = require('express-session');
 const mongoStore = require('connect-mongo')(session);
+const passportSocketIo = require("passport.socketio");
 
 const config = require('./server/config');
 
 const mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 const db = require('./db');
+
+const sessionStore = new mongoStore({
+    mongooseConnection: mongoose.connection,
+    collection: 'sessions'
+});
 
 const app = express();
 const server = require('http').Server(app);
@@ -42,16 +48,25 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {maxAge: 1000*60*60*24, httpOnly: true},
-    store: new mongoStore({
-        mongooseConnection: mongoose.connection,
-        collection: 'sessions' // default
-    })
+    store: sessionStore
 }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
 const io = require('socket.io').listen(server);
+
+io.use(passportSocketIo.authorize({
+    cookieParser: cookieParser,
+    key:          'connect.sid',
+    secret:       config.secret,
+    store:        sessionStore
+}));
+
+io.use(function(socket, next){
+    socket.user = socket.client.request.user;
+    return next();
+});
 
 require('./server/auth')(app, passport);
 require('./server/video')(app, io, __dirname);

@@ -33,7 +33,7 @@ var appRoutes = [
     { path: '', component: home_component_1.HomeComponent, canActivate: [authentication_guard_1.AuthGuard] },
     { path: '**', component: not_found_component_1.PageNotFoundComponent, canActivate: [authentication_guard_1.AuthGuard] }
 ];
-var AppModule = (function () {
+var AppModule = /** @class */ (function () {
     function AppModule() {
     }
     AppModule = __decorate([
@@ -41,7 +41,6 @@ var AppModule = (function () {
             imports: [platform_browser_1.BrowserModule, video_module_1.VideoModule, explaining_module_1.ExplainingModule, forms_1.FormsModule, http_1.HttpModule, home_module_1.HomeModule, forms_2.ReactiveFormsModule, router_1.RouterModule.forRoot(appRoutes)],
             bootstrap: [app_component_1.AppComponent],
             declarations: [app_component_1.AppComponent, not_found_component_1.PageNotFoundComponent, login_component_1.LoginComponent, login_component_1.LogoutComponent, login_component_1.RegistrationComponent, validation_service_1.ControlMessages],
-            schemas: [core_1.CUSTOM_ELEMENTS_SCHEMA],
             providers: [authentication_service_1.AuthenticationService, authentication_guard_1.AuthGuard, file_upload_service_1.FilesUploadService, validation_service_1.ValidationService]
         })
     ], AppModule);

@@ -1,53 +1,68 @@
-import {Component, OnInit} from '@angular/core';
-import { AuthenticationService } from "../shared/service/authentication.service";
+import {Component, OnDestroy} from '@angular/core';
+import {AuthenticationService} from "../shared/service/authentication.service";
 import {User} from "../shared/classes/user";
 import {Http} from "@angular/http";
-import {Observable} from 'rxjs/Observable';
-import * as io from 'socket.io-client';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {SocketService} from "../shared/service/websocket.service";
+import {Subject} from "rxjs/Subject";
+import {Word} from "../shared/classes/explaining";
 
 @Component({
     selector: 'explaining',
     templateUrl: 'app/explaining/explaining.component.html',
 })
-export class ExplainingComponent {
-    public user : User;
-    public newWord: string;
-    form : FormGroup;
-    public words : string[];
-    socket:any;
+export class ExplainingComponent implements OnDestroy {
+    user : User;
+    students : User[];
+    words : Word[];
+    answers : any;
 
-    constructor(private authenticationService : AuthenticationService, private http: Http, private fb: FormBuilder) {
-        this.socket = io();
+    newWord: string;
+    answer: string;
+
+    form : FormGroup;
+
+    private unsubscribe = new Subject();
+
+    constructor(private authenticationService : AuthenticationService, private http: Http, private fb: FormBuilder, private socket : SocketService) {
         this.user = this.authenticationService.currentUser;
-        this.getWords();
 
         this.form = this.fb.group({
             'newWord': ["", Validators.required]
         });
 
-        let playObservable = new Observable(observer => {
-            this.socket.on('refreshWords', (data: any) => observer.next(data));
+        this.socket.on('refreshWords').takeUntil(this.unsubscribe).subscribe((words: Word[])=>{
+            this.words = words;
         });
-        playObservable.subscribe(()=>{
-            this.getWords();
+        this.socket.on('refreshStudents').takeUntil(this.unsubscribe).subscribe((students: User[])=>{
+            this.students = students;
+        });
+        this.socket.on('refreshAnswers').takeUntil(this.unsubscribe).subscribe((answers: User[])=>{
+            this.answers = answers;
         });
     }
 
-    getWords():void{
-        this.http.get('/getWords').map(res => res.json())
-            .subscribe( (words : string[]) =>  {
-                this.words = words;
-            });
+    onAnswerChange(answer: string) {
+        this.http.post('/addAnswer', {answer:answer}).takeUntil(this.unsubscribe).subscribe(() => {});
     }
+
+    nextWord():void{
+        this.socket.emit("nextWord", null);
+    }
+
     addWord(newWord: string):void{
-        this.http.post('/addWord', {word:newWord}).subscribe(() => {
+        this.http.post('/addWord', {word:newWord}).takeUntil(this.unsubscribe).subscribe(() => {
             this.newWord = null;
         });
     }
     deleteWord(index: number):void{
-        this.http.post('/deleteWord', {index:index}).subscribe(() => {
+        this.http.post('/deleteWord', {index:index}).takeUntil(this.unsubscribe).subscribe(() => {
             this.newWord = null;
         });
+    }
+
+    ngOnDestroy(): void {
+        this.unsubscribe.next();
+        this.unsubscribe.complete();
     }
 }

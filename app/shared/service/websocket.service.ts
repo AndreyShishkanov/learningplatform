@@ -1,64 +1,19 @@
-import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
-import { Router } from '@angular/router';
-import { User }from "../classes/user";
-import 'rxjs/add/operator/map'
-import 'rxjs/add/observable/of';
-import { Subject, Observable, Subscription } from 'rxjs/Rx';
-import { WebSocketSubject } from "rxjs/observable/dom/WebSocketSubject";
-import {ServerResponse} from "../classes/serverResult";
-import {FormGroup} from "@angular/forms";
+import {Injectable} from "@angular/core";
+import {Observable} from 'rxjs/Observable';
+import * as io from "socket.io-client";
 
 @Injectable()
-export class WebSocketService {
-    private ws: WebSocketSubject<Object>;
-    private socket: Subscription;
-    private url: string;
-
-    public message: Subject<Object> = new Subject();
-    public opened: Subject<boolean> = new Subject();
-
-    public close():void{
-        this.socket.unsubscribe();
-        this.ws.complete();
+export class SocketService {
+    private socket: any;
+    constructor() {
+        this.socket = io();
     }
-
-    public sendMessage( message:string ):void{
-        this.ws.next( message );
+    emit(action:string, data:any): void {
+        this.socket.emit(action, data);
     }
-
-    public start( url: string ):void{
-        let self = this;
-
-        this.url = url;
-
-        this.ws = Observable.webSocket( this.url );
-
-        this.socket = this.ws.subscribe( {
-
-            next: ( data:MessageEvent ) => {
-                if( data[ 'type' ] == 'welcome' ){
-                    self.opened.next( true );
-                }
-                this.message.next( data );
-            },
-            error: () => {
-
-                self.opened.next( false );
-                this.message.next( { type: 'closed' } );
-
-                self.socket.unsubscribe();
-
-                setTimeout( () => {
-                    self.start( self.url );
-                }, 1000 );
-
-            },
-            complete: () => {
-                this.message.next( { type: 'closed' } );
-            }
-
-        } );
-
+    on(action:string):Observable<any> {
+        return new Observable(observer => {
+            this.socket.on(action, (data: any) => observer.next(data));
+        });
     }
 }
