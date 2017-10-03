@@ -1,12 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
-export class ValidationService {
-    getValidationServerMessages(){
-
-    }
-}
-
 @Component({
     selector: 'control-messages',
     template: `<div class="invalid-feedback" [hidden]="!(control.touched && control.invalid)" *ngIf="errorMessage !== null">{{errorMessage}}</div>`

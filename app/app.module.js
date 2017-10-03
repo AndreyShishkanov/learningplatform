@@ -24,7 +24,7 @@ var file_upload_service_1 = require("./shared/service/file-upload.service");
 var forms_2 = require("@angular/forms");
 var explaining_component_1 = require("./explaining/explaining.component");
 var explaining_module_1 = require("./explaining/explaining.module");
-var validation_service_1 = require("./shared/service/validation.service");
+var validation_component_1 = require("./shared/modules/validation.component");
 var appRoutes = [
     { path: 'login', component: login_component_1.LoginComponent },
     { path: 'registration', component: login_component_1.RegistrationComponent },
@@ -40,8 +40,8 @@ var AppModule = /** @class */ (function () {
         core_1.NgModule({
             imports: [platform_browser_1.BrowserModule, video_module_1.VideoModule, explaining_module_1.ExplainingModule, forms_1.FormsModule, http_1.HttpModule, home_module_1.HomeModule, forms_2.ReactiveFormsModule, router_1.RouterModule.forRoot(appRoutes)],
             bootstrap: [app_component_1.AppComponent],
-            declarations: [app_component_1.AppComponent, not_found_component_1.PageNotFoundComponent, login_component_1.LoginComponent, login_component_1.LogoutComponent, login_component_1.RegistrationComponent, validation_service_1.ControlMessages],
-            providers: [authentication_service_1.AuthenticationService, authentication_guard_1.AuthGuard, file_upload_service_1.FilesUploadService, validation_service_1.ValidationService]
+            declarations: [app_component_1.AppComponent, not_found_component_1.PageNotFoundComponent, login_component_1.LoginComponent, login_component_1.LogoutComponent, login_component_1.RegistrationComponent, validation_component_1.ControlMessages],
+            providers: [authentication_service_1.AuthenticationService, authentication_guard_1.AuthGuard, file_upload_service_1.FilesUploadService]
         })
     ], AppModule);
     return AppModule;
