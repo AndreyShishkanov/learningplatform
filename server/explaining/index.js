@@ -11,10 +11,20 @@ module.exports = function (app, io) {
         io.emit('refreshWords', words);
         io.emit('refreshAnswers', answers);
 
-        // socket.on('answer', function(answer){
-        //     answers[socket.user.name] = answer;
-        //     io.emit('refreshAnswers', answers);
-        // });
+        socket.on('answer', function(answer){
+            answers[socket.user.name] = answer;
+            io.emit('refreshAnswers', answers);
+        });
+
+        socket.on('addWord', function(word){
+            words.push({word: word, guessed:false});
+            io.emit('refreshWords', words);
+        });
+
+        socket.on('deleteWord', function(index){
+            words.splice(index, 1);
+            io.emit('refreshWords', words);
+        });
 
         socket.on('nextWord', function(){
             words.find(x=>x.guessed === false).guessed = true;
@@ -29,23 +39,5 @@ module.exports = function (app, io) {
             }
             io.emit('refreshStudents', students);
         });
-    });
-
-    app.post('/addAnswer', function(req, res) {
-        answers[req.user.name] = req.body.answer;
-        io.emit('refreshAnswers', answers);
-        res.end();
-    });
-
-    app.post('/addWord', function(req, res) {
-        words.push({word: req.body.word, guessed:false});
-        io.emit('refreshWords', words);
-        res.end();
-    });
-
-    app.post('/deleteWord', function(req, res) {
-        words.splice(req.body.index, 1);
-        io.emit('refreshWords', words);
-        res.end();
     });
 };

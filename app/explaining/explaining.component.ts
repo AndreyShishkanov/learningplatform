@@ -15,6 +15,7 @@ export class ExplainingComponent implements OnDestroy {
     user : User;
     students : User[];
     words : Word[];
+    guessedWords = Array<Word>();
     answers : any;
 
     newWord: string;
@@ -33,6 +34,7 @@ export class ExplainingComponent implements OnDestroy {
 
         this.socket.on('refreshWords').takeUntil(this.unsubscribe).subscribe((words: Word[])=>{
             this.words = words;
+            this.guessedWords = this.words.filter(x=>x.guessed);
         });
         this.socket.on('refreshStudents').takeUntil(this.unsubscribe).subscribe((students: User[])=>{
             this.students = students;
@@ -43,7 +45,7 @@ export class ExplainingComponent implements OnDestroy {
     }
 
     onAnswerChange(answer: string) {
-        this.http.post('/addAnswer', {answer:answer}).takeUntil(this.unsubscribe).subscribe(() => {});
+        this.socket.emit("answer", answer);
     }
 
     nextWord():void{
@@ -51,14 +53,12 @@ export class ExplainingComponent implements OnDestroy {
     }
 
     addWord(newWord: string):void{
-        this.http.post('/addWord', {word:newWord}).takeUntil(this.unsubscribe).subscribe(() => {
-            this.newWord = null;
-        });
+        this.socket.emit("addWord", newWord);
+        this.newWord = null;
     }
     deleteWord(index: number):void{
-        this.http.post('/deleteWord', {index:index}).takeUntil(this.unsubscribe).subscribe(() => {
-            this.newWord = null;
-        });
+        this.socket.emit("deleteWord", index);
+        this.newWord = null;
     }
 
     ngOnDestroy(): void {
