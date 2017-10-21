@@ -1,0 +1,18 @@
+{
+  "/": {
+    "target": "http://localhost:5000",
+    "secure": false
+  },
+  "/socket.io": {
+    "target": "http://localhost:5000",
+    "secure": false
+  },
+  "/node_modules": {
+    "target": "http://localhost:5000",
+    "secure": false
+  },
+  "/public": {
+    "target": "http://localhost:5000",
+    "secure": false
+  }
+}

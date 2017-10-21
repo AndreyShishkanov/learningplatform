@@ -74,7 +74,11 @@ require('./server/explaining')(app, io);
 require('./server/data')(app);
 
 app.all('*', function (req, res) {
+  if(process.env.NODE_ENV === 'producion'){
     res.sendFile(path.resolve('app/index.html'));
+  }else {
+    res.redirect('http://localhost:4200' + req.originalUrl);
+  }
 });
 
 server.listen(port, function () {

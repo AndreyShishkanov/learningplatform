@@ -10,7 +10,7 @@ import {Subject} from "rxjs/Subject";
 
 @Component({
     selector: 'video-app',
-    templateUrl: 'app/video/video.html',
+    templateUrl: 'video.html',
 })
 export class VideoComponent implements OnDestroy{
     api:VgAPI;

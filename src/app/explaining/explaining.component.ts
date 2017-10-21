@@ -1,7 +1,6 @@
 import {Component, OnDestroy} from '@angular/core';
 import {AuthenticationService} from "../shared/service/authentication.service";
 import {User} from "../shared/classes/user";
-import {Http} from "@angular/http";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {SocketService} from "../shared/service/websocket.service";
 import {Subject} from "rxjs/Subject";
@@ -9,7 +8,7 @@ import {Word} from "../shared/classes/explaining";
 
 @Component({
     selector: 'explaining',
-    templateUrl: 'app/explaining/explaining.component.html',
+    templateUrl: 'explaining.component.html',
 })
 export class ExplainingComponent implements OnDestroy {
     user : User;
@@ -25,7 +24,7 @@ export class ExplainingComponent implements OnDestroy {
 
     private unsubscribe = new Subject();
 
-    constructor(private authenticationService : AuthenticationService, private http: Http, private fb: FormBuilder, private socket : SocketService) {
+    constructor(private authenticationService : AuthenticationService, private fb: FormBuilder, private socket : SocketService) {
         this.user = this.authenticationService.currentUser;
 
         this.form = this.fb.group({

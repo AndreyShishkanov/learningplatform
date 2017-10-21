@@ -6,7 +6,7 @@ import { Http, Response } from '@angular/http';
 import {ServerResponse} from "../shared/classes/serverResult";
 
 @Component({
-    templateUrl: 'app/login/logout.component.html',
+    templateUrl: 'logout.component.html',
     selector: 'logout',
 })
 
@@ -20,7 +20,7 @@ export class LogoutComponent{
 }
 
 @Component({
-    templateUrl: 'app/login/login.form.html',
+    templateUrl: 'login.form.html',
 })
 
 export class LoginComponent implements OnInit {
@@ -42,7 +42,7 @@ export class LoginComponent implements OnInit {
 }
 
 @Component({
-    templateUrl: 'app/login/registration.form.html',
+    templateUrl: 'registration.form.html',
 })
 
 export class RegistrationComponent implements OnInit {
