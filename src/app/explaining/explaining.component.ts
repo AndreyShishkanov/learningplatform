@@ -20,11 +20,11 @@ export class ExplainingComponent implements OnDestroy {
     newWord: string;
     answer: string;
 
-    form : FormGroup;
+    form: FormGroup;
 
     private unsubscribe = new Subject();
 
-    constructor(private authenticationService : AuthenticationService, private fb: FormBuilder, private socket : SocketService) {
+    constructor(public authenticationService : AuthenticationService, private fb: FormBuilder, private socket : SocketService) {
         this.user = this.authenticationService.currentUser;
 
         this.form = this.fb.group({

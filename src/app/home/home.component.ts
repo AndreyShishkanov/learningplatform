@@ -8,7 +8,7 @@ import { AuthenticationService } from "../shared/service/authentication.service"
 export class HomeComponent {
     public name : string;
 
-    constructor(private authenticationService : AuthenticationService) {
+    constructor(public authenticationService : AuthenticationService) {
         this.name = this.authenticationService.currentUser? this.authenticationService.currentUser.name : null;
     }
 }

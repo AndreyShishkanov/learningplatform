@@ -2,11 +2,8 @@ const express = require('express');
 const path = require('path');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
-const favicon = require('serve-favicon');
 const cookieParser = require('cookie-parser');
-const fileUpload = require('express-fileupload');
 const passport = require('passport');
-const flash = require('connect-flash');
 const session = require('express-session');
 const mongoStore = require('connect-mongo')(session);
 const passportSocketIo = require("passport.socketio");
@@ -24,21 +21,21 @@ const sessionStore = new mongoStore({
 
 const app = express();
 const server = require('http').Server(app);
+const io = require('socket.io').listen(server);
+const port = process.env.PORT || 5000;
+
+app.locals.rootPath = __dirname;
 
 require('./db/starter-migration')();
-
-const port = process.env.PORT || 5000;
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 app.use('/app', express.static(path.join(__dirname, 'app')));
 app.use('/public', express.static(path.join(__dirname, 'public')));
-app.use('/files', express.static(path.join(__dirname, 'files_storage')));
-app.use(favicon(__dirname + '/public/images/favicon.ico'));
+app.use('/files_storage', express.static(path.join(__dirname, 'files_storage')));
 
 require('./server/auth/passport')(passport);
 
-app.use(fileUpload());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -52,9 +49,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
-
-const io = require('socket.io').listen(server);
 
 io.use(passportSocketIo.authorize({
     cookieParser: cookieParser,
@@ -69,16 +63,12 @@ io.use(function(socket, next){
 });
 
 require('./server/auth')(app, passport);
-require('./server/video')(app, io, __dirname);
+require('./server/video')(app, io);
 require('./server/explaining')(app, io);
 require('./server/data')(app);
 
 app.all('*', function (req, res) {
-  if(process.env.NODE_ENV === 'producion'){
-    res.sendFile(path.resolve('app/index.html'));
-  }else {
-    res.redirect('http://localhost:4200' + req.originalUrl);
-  }
+    res.sendFile(path.resolve('public/dist/index.html'));
 });
 
 server.listen(port, function () {

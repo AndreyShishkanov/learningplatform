@@ -1,12 +1,11 @@
 import { NgModule }      from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { ExplainingComponent } from './explaining.component';
 import { FormsModule } from '@angular/forms';
-import {SocketService} from "../shared/service/websocket.service";
+import {routing} from "./explaining.routing";
+import {SharedModule} from "../shared/shared.module";
 
 @NgModule({
-    imports:      [ BrowserModule, FormsModule],
-    declarations: [ ExplainingComponent ],
-    providers:    [SocketService]
+    imports:      [ FormsModule, SharedModule, routing],
+    declarations: [ ExplainingComponent ]
 })
 export class ExplainingModule { }

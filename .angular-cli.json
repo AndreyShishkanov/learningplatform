@@ -21,7 +21,7 @@
       "prefix": "app",
       "styles": [
         "../public/stylesheets/style.scss",
-        "../public/stylesheets/theme.scss"
+        "../node_modules/videogular2/fonts/videogular.css"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

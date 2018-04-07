@@ -8,7 +8,7 @@ module.exports = function(app, passport){
         res.redirect('/');
     });
 
-    app.post('/login', (req, res, next) => {
+    app.post('/api/login', (req, res, next) => {
         passport.authenticate('login',
             (err, user, result) => {
                 if (err) throw err;
@@ -27,7 +27,7 @@ module.exports = function(app, passport){
         )(req, res, next);
     });
 
-    app.post('/signup', (req, res, next) => {
+    app.post('/api/signup', (req, res, next) => {
         passport.authenticate('signup',
             (err, user, result) => {
                 if (err) throw err;
@@ -64,15 +64,15 @@ module.exports = function(app, passport){
         )(req, res, next);
     });
 
-    app.post('/logout', (req, res) => {
+    app.post('/api/logout', (req, res) => {
         req.logout();
         res.end();
     });
 
-    app.post('/currentUser', (req, res) => {
+    app.post('/api/currentUser', (req, res) => {
             res.json(req.user);
     });
-    app.post('/isAuthorizated', (req, res) => {
+    app.post('/api/isAuthorizated', (req, res) => {
         res.json(typeof req.user !== 'undefined');
     });
 };

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Http, Response } from '@angular/http';
+import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User }from "../classes/user";
 import 'rxjs/add/operator/map'
@@ -12,7 +12,7 @@ import {FormGroup} from "@angular/forms";
 export class AuthenticationService {
     currentUser : User;
 
-    constructor(private http: Http, private router: Router) {
+    constructor(private http: HttpClient, private router: Router) {
         if(!this.currentUser) {
             this.getCurrentUser().subscribe((user: User) => {
                     this.currentUser = user;
@@ -21,9 +21,8 @@ export class AuthenticationService {
     }
 
     login(form : FormGroup) {
-            this.http.post('/login', {name: form.controls['name'].value, password: form.controls['password'].value})
-                .map(res => res.json())
-                .subscribe((response: ServerResponse) => {
+            this.http.post<ServerResponse>('/api/login', {name: form.controls['name'].value, password: form.controls['password'].value})
+                .subscribe((response) => {
                     if (response.success === true) {
                         this.currentUser = response.user;
                         this.router.navigate(['']);
@@ -34,9 +33,8 @@ export class AuthenticationService {
     }
 
     signUp(name: string, password: string) : ServerResponse {
-        this.http.post('/signup', { name: name, password: password })
-            .map(res => res.json())
-            .subscribe( (response : ServerResponse) =>  {
+        this.http.post<ServerResponse>('/api/signup', { name: name, password: password })
+            .subscribe( (response) =>  {
                 if (response.success === true) {
                     this.currentUser = response.user;
                     this.router.navigate(['']);
@@ -47,26 +45,20 @@ export class AuthenticationService {
     }
 
     logout(): void {
-        this.http.post('/logout', { }).subscribe(()=>{
+        this.http.post('/api/logout', { }).subscribe(()=>{
             this.currentUser = null;
             this.router.navigate(['/login']);
         });
     }
 
     getCurrentUser(): Observable<User>{
-        return this.http.post('/currentUser', { }).map(
-            (res : Response) => {
-                return res.text() ? res.json() : null;
-            });
+        return this.http.post<User>('/api/currentUser', { });
     }
     isAuthorizated(): Observable<boolean>{
         if(this.currentUser){
             return Observable.of(this.currentUser != null);
         }else {
-            return this.http.post('/isAuthorizated', {}).map(
-                (res: Response) => {
-                    return res.json();
-                });
+            return this.http.post<boolean>('/api/isAuthorizated', {});
         }
     }
 }

@@ -3,10 +3,11 @@ import {VgAPI} from 'videogular2/core';
 import {AuthenticationService} from "../shared/service/authentication.service";
 import {Role} from "../shared/classes/user";
 import {Attachment} from "../shared/classes/attachment";
-import {Http} from "@angular/http";
+import { HttpClient } from '@angular/common/http';
 import {FilesUploadService} from "../shared/service/file-upload.service";
 import {SocketService} from '../shared/service/websocket.service';
 import {Subject} from "rxjs/Subject";
+import {FileUploader} from "ng2-file-upload";
 
 @Component({
     selector: 'video-app',
@@ -19,30 +20,28 @@ export class VideoComponent implements OnDestroy{
     attachments: Attachment[];
     paused = true;
 
+    public uploader:FileUploader = new FileUploader({url: '/api/upload'});
+
     private unsubscribe = new Subject();
 
-    constructor(private authenticationService: AuthenticationService,private fileUploadService : FilesUploadService, private http: Http, private socket : SocketService) {
+    constructor(public authenticationService: AuthenticationService, private fileUploadService : FilesUploadService, private http: HttpClient, private socket : SocketService) {
         this.getMedias();
         this.currentRole = this.authenticationService.currentUser.role;
     }
     getMedias():void{
-        this.http.post('/getMediaList', {}).map(res => res.json())
+        this.http.post('/api/getMediaList', {})
             .subscribe( (response : Attachment[]) =>  {
                 this.attachments = response;
                 this.currentMedia = response.filter(x=>x.selected)[0];
             });
     }
 
-    fileChangeEvent(file: File[]) {
-        this.fileUploadService.upload("/upload",file).takeUntil(this.unsubscribe).subscribe(result => {
-            this.getMedias();
-            alert(result);
-        });
+    fileChangeEvent() {
+        this.uploader.uploadAll();
     }
     mediaChangeEvent(i: number) {
         this.currentMedia = this.attachments[i];
-        this.http.post("/setCurrentMedia", {attachment: this.attachments[i]}).takeUntil(this.unsubscribe).subscribe(() => {
-        });
+        this.http.post("/api/setCurrentMedia", {attachment: this.attachments[i]}).takeUntil(this.unsubscribe).subscribe(() => {});
     }
 
     playOrPause():void{

@@ -27,7 +27,9 @@ module.exports = function (app, io) {
         });
 
         socket.on('nextWord', function(){
-            words.find(x=>x.guessed === false).guessed = true;
+            const word = words.find(x=>x.guessed === false);
+            if(!word) return;
+            word.guessed = true;
             answers = {};
             io.emit('refreshAnswers', answers);
             io.emit('refreshWords', words);

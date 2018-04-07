@@ -1,6 +1,17 @@
 const Attachment = require('../../db/models/attachment');
+const fs = require('fs');
+const multer = require('multer');
 
-module.exports = function(app, io, rootPath){
+module.exports = function(app, io){
+
+    const upload = multer({ storage: multer.diskStorage({
+        destination: function (req, file, cb) {
+            cb(null, app.locals.rootPath + '/files_storage/')
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.originalname)
+        }
+    })}).single('file');
 
     io.on('connection', function (socket) {
         socket.on('play', function (time) {
@@ -17,31 +28,33 @@ module.exports = function(app, io, rootPath){
         });
     });
 
-    app.post('/upload', function(req, res) {
-        if (!req.files)
-            return res.status(400).send('No files were uploaded.');
+    app.post('/api/upload', function(req, res) {
 
-        let file = req.files.file;
+        const dir = './files_storage/';
+        if (!fs.existsSync(dir)){
+            fs.mkdirSync(dir);
+        }
 
-        file.mv(rootPath + '/files_storage/' + file.name, function(err) {
-            if (err) return res.status(500).send(err);
-
+        upload(req, res, function (err) {
+            if (err) {
+                return res.end(err.toString());
+            }
             unselectAllMedia(() => {
                 let attachment = new Attachment({
-                    name: file.name,
-                    href: '/files/' + file.name,
-                    type: file.mimetype,
+                    name: req.file.filename,
+                    href: '/files_storage/' + req.file.filename,
+                    type: req.file.mimetype,
                     selected: true
                 });
 
                 attachment.save(function(err) {
                     if (err) throw err;
-                    res.json('File uploaded!');
-                });
+                    res.end();
+                  });
             });
         });
     });
-    app.post('/getMediaList', function(req, res) {
+    app.post('/api/getMediaList', function(req, res) {
         Attachment.find({}, function(err, docs){
 
             if(err) res.send(err);
@@ -49,16 +62,16 @@ module.exports = function(app, io, rootPath){
             res.send(docs);
         });
     });
-    app.post('/setCurrentMedia', function(req, res) {
+    app.post('/api/setCurrentMedia', function(req, res) {
         unselectAllMedia(() => {
             Attachment.findById(req.body.attachment._id, function(err, doc){
                 if(err) res.send(err);
                     doc.selected = true;
                     doc.save(function(err) {
                         if (err)
-                            console.log('error')
+                            console.log('error');
                         else
-                            console.log('success')
+                            console.log('success');
                     });
             });
         });

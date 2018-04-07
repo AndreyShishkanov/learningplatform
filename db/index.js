@@ -1,7 +1,7 @@
 const Mongoose = require('mongoose');
 const config = require('../server/config');
 
-Mongoose.connect(config.database, { useMongoClient: true });
+Mongoose.connect(config.database);
 
 const db = Mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error'));
