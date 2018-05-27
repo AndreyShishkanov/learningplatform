@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {VgAPI} from 'videogular2/core';
 import {AuthenticationService} from "../shared/service/authentication.service";
 import {Role} from "../shared/classes/user";
@@ -13,7 +13,7 @@ import {FileUploader} from "ng2-file-upload";
     selector: 'video-app',
     templateUrl: 'video.html',
 })
-export class VideoComponent implements OnDestroy{
+export class VideoComponent implements OnInit, OnDestroy{
     api:VgAPI;
     currentRole: Role;
     currentMedia: Attachment;
@@ -28,7 +28,13 @@ export class VideoComponent implements OnDestroy{
         this.getMedias();
         this.currentRole = this.authenticationService.currentUser.role;
     }
+
+    ngOnInit(){
+        this.uploader.onSuccessItem = (item, response, status, headers) => this.getMedias();
+    }
+
     getMedias():void{
+        this.currentMedia = null;
         this.http.post('/api/getMediaList', {})
             .subscribe( (response : Attachment[]) =>  {
                 this.attachments = response;
