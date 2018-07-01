@@ -1,10 +1,10 @@
 import {Component, OnDestroy} from '@angular/core';
-import {AuthenticationService} from "../shared/service/authentication.service";
-import {User} from "../shared/classes/user";
+import {AuthenticationService} from "../../shared/services/auth/authentication.service";
+import {User} from "../../shared/classes/user";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {SocketService} from "../shared/service/websocket.service";
+import {SocketService} from "../../shared/services/websockets/websocket.service";
 import {Subject} from "rxjs/Subject";
-import {Word} from "../shared/classes/explaining";
+import {Word} from "../../shared/classes/explaining";
 
 @Component({
     selector: 'explaining',

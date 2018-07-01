@@ -1,18 +1,20 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from "./app.component";
-import { HomeModule } from "./home/home.module";
+import { HomeModule } from "./sections/home/home.module";
 import { PageNotFoundComponent } from "./not-found.component";
-import { FilesUploadService } from "./shared/service/file-upload.service";
+import { FilesUploadService } from "./shared/services/files/file-upload.service";
 import { routing } from "./app.routing";
-import { SharedModule } from "./shared/shared.module";
-import {HttpClientModule} from "@angular/common/http";
-import {LoginModule} from "./authentication/login.module";
+import { HttpClientModule } from "@angular/common/http";
+import { HeaderComponent } from './shared/ui/header/header.component';
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { SidebarComponent } from './shared/ui/sidebar/sidebar.component';
 
 @NgModule({
-    imports:      [ BrowserModule, HttpClientModule, HomeModule, LoginModule, SharedModule.forRoot(), routing],
+    imports:      [ BrowserModule, CommonModule, RouterModule, HttpClientModule, HomeModule, routing],
     bootstrap:    [ AppComponent ],
-    declarations: [ AppComponent, PageNotFoundComponent ],
+    declarations: [ AppComponent, PageNotFoundComponent, HeaderComponent, SidebarComponent ],
     providers:    [ FilesUploadService ]
 })
 export class AppModule { }

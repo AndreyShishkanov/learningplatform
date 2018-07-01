@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ControlMessages } from "./validation.component";
+import { ValidationComponent } from "./validation.component";
 
 @NgModule({
     imports: [
         CommonModule
     ],
-    declarations: [ControlMessages],
-    exports: [ControlMessages]
+    declarations: [ValidationComponent],
+    exports: [ValidationComponent]
 })
 export class ValidationModule { }

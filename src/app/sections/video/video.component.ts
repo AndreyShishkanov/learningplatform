@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {VgAPI} from 'videogular2/core';
-import {AuthenticationService} from "../shared/service/authentication.service";
-import {Role} from "../shared/classes/user";
-import {Attachment} from "../shared/classes/attachment";
+import {AuthenticationService} from "../../shared/services/auth/authentication.service";
+import {Role} from "../../shared/classes/user";
+import {Attachment} from "../../shared/classes/attachment";
 import { HttpClient } from '@angular/common/http';
-import {FilesUploadService} from "../shared/service/file-upload.service";
-import {SocketService} from '../shared/service/websocket.service';
+import {FilesUploadService} from "../../shared/services/files/file-upload.service";
+import {SocketService} from '../../shared/services/websockets/websocket.service';
 import {Subject} from "rxjs/Subject";
 import {FileUploader} from "ng2-file-upload";
+import {VideoService} from "./video.service";
 
 @Component({
     selector: 'video-app',
@@ -24,7 +25,7 @@ export class VideoComponent implements OnInit, OnDestroy{
 
     private unsubscribe = new Subject();
 
-    constructor(public authenticationService: AuthenticationService, private fileUploadService : FilesUploadService, private http: HttpClient, private socket : SocketService) {
+    constructor(public authenticationService: AuthenticationService, private videoService: VideoService, private fileUploadService : FilesUploadService, private socket : SocketService) {
         this.getMedias();
         this.currentRole = this.authenticationService.currentUser.role;
     }
@@ -35,7 +36,7 @@ export class VideoComponent implements OnInit, OnDestroy{
 
     getMedias():void{
         this.currentMedia = null;
-        this.http.post('/api/getMediaList', {})
+        this.videoService.getMedias()
             .subscribe( (response : Attachment[]) =>  {
                 this.attachments = response;
                 this.currentMedia = response.filter(x=>x.selected)[0];
@@ -46,8 +47,11 @@ export class VideoComponent implements OnInit, OnDestroy{
         this.uploader.uploadAll();
     }
     mediaChangeEvent(i: number) {
-        this.currentMedia = this.attachments[i];
-        this.http.post("/api/setCurrentMedia", {attachment: this.attachments[i]}).takeUntil(this.unsubscribe).subscribe(() => {});
+        this.currentMedia = null;
+        
+        this.videoService.setCurrentMedia(this.attachments[i]).subscribe(() => {
+            this.currentMedia = this.attachments[i];
+        });
     }
 
     playOrPause():void{

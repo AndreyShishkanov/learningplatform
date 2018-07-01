@@ -32,7 +32,7 @@ module.exports = function(app, passport){
             (err, user, result) => {
                 if (err) throw err;
                 if (!user) {
-                    res.json({success: false, message: result.message, field: result.field});
+                    res.json({success: false, message: result.message, field: 'name'});
                 }else{
                     Role.findOne({ name : "Student"}, function(err,role) {
                         if(err) {
@@ -70,10 +70,7 @@ module.exports = function(app, passport){
     });
 
     app.post('/api/currentUser', (req, res) => {
-            res.json(req.user);
-    });
-    app.post('/api/isAuthorizated', (req, res) => {
-        res.json(typeof req.user !== 'undefined');
+        res.json(req.user);
     });
 };
 

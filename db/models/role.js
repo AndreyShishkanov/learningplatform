@@ -1,9 +1,15 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
 
-var Role = new Schema({
+const Role = new Schema({
     name: String,
     hasControlAccess: Boolean,
 });
+
+Role.methods.toJSON = function() {
+    let obj = this.toObject();
+    delete obj.__v;
+    return obj;
+};
 
 module.exports = mongoose.model('Role', Role);

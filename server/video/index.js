@@ -54,7 +54,7 @@ module.exports = function(app, io){
             });
         });
     });
-    app.post('/api/getMediaList', function(req, res) {
+    app.get('/api/getMediaList', function(req, res) {
         Attachment.find({}, function(err, docs){
 
             if(err) res.send(err);
@@ -71,7 +71,7 @@ module.exports = function(app, io){
                         if (err)
                             console.log('error');
                         else
-                            console.log('success');
+                            res.send(null);
                     });
             });
         });

@@ -10,6 +10,13 @@ const User = new Schema({
     role:{type: Schema.ObjectId, ref: 'Role'}
 });
 
+User.methods.toJSON = function() {
+    let obj = this.toObject();
+    delete obj.password;
+    delete obj.__v;
+    return obj;
+};
+
 User.methods.generateHash = (password) => {
     return passwordHash.generate(password);
 };

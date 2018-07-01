@@ -1,0 +1,23 @@
+<div class="col-xl-4">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+            <div class="form-group">
+                <input class="form-control" [ngClass]="{'is-invalid': form.controls['name'].invalid && form.controls['name'].touched}" type="text" id="name" placeholder="name" formControlName="name" />
+                <validation-messages [control]="form.controls['name']"></validation-messages>
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" id="password" placeholder="password" formControlName="password" />
+            </div>
+            <div class="form-group">
+                <input class="form-control" type="password" id="confirmPassword" placeholder="confirm password" formControlName="confirmPassword" />
+            </div>
+            <div class="form-group">
+                <select class="form-control" formControlName="role">
+                    <option *ngFor="let role of roles" [value]="role.name">{{role.name}}</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary" [disabled]="form.invalid">Sign Up</button>
+            </div>
+            <div class="alert alert-danger" *ngIf="form.controls['confirmPassword'].errors?.matchPassword">Passwords are not matching</div>
+    </form>
+</div>

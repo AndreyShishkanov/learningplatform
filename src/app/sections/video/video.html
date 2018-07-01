@@ -27,7 +27,7 @@
         <source src="{{currentMedia.href}}" type="{{currentMedia.type}}">
     </video>
 </vg-player>
-<form *ngIf="authenticationService.currentUser.role.hasControlAccess">
+<form *ngIf="authenticationService.currentUser?.role.hasControlAccess">
     <div class="form-group row">
         <label class="col-sm-2 col-form-label col-form-label-lg" for="file">File</label>
         <div class="col-sm-7">

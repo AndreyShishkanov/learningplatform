@@ -2,10 +2,10 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-    selector: 'control-messages',
+    selector: 'validation-messages',
     template: `<div class="invalid-feedback" [hidden]="!(control.touched && control.invalid)" *ngIf="errorMessage !== null">{{errorMessage}}</div>`
 })
-export class ControlMessages {
+export class ValidationComponent {
 
     @Input() control: FormControl;
     constructor() { }
