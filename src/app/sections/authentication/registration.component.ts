@@ -4,6 +4,7 @@ import {FormGroup, Validators, FormControl, FormBuilder} from '@angular/forms';
 import {Role} from "../../shared/classes/user";
 import {Router} from "@angular/router";
 import {DataService} from "../../shared/services/data/data.service";
+import {HttpErrorResponse} from "@angular/common/http";
 
 @Component({
     templateUrl: 'registration.component.html',
@@ -33,13 +34,13 @@ export class RegistrationComponent implements OnInit {
     onSubmit() {
         if(this.form.valid){
             this.authenticationService.signUp(this.form.controls['name'].value, this.form.controls['password'].value).subscribe( (response) =>  {
-                if (response.success === true) {
-                    this.authenticationService.currentUser = response.user;
-                    this.router.navigate(['']);
-                }else{
-                    this.form.controls[response.field].setErrors({[response.message]:true});
+                this.authenticationService.currentUser = response.user;
+                this.router.navigate(['']);
+            },
+                (err: HttpErrorResponse) => {
+                    this.form.controls[err.error.field].setErrors({[err.error.message]:true});
                 }
-            });
+            );
         }
     }
 

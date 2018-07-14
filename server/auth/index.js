@@ -1,6 +1,5 @@
 const User = require('../../db/models/user');
 const Role = require('../../db/models/role');
-const config = require('../config');
 
 module.exports = function(app, passport){
 
@@ -13,13 +12,13 @@ module.exports = function(app, passport){
             (err, user, result) => {
                 if (err) throw err;
                 if (!user) {
-                    res.json({success: false, message: result.message, field: result.field});
+                    returnError(res, 401, result.field, result.message);
                 }else{
                     req.logIn(user, err => {
                         if(err){
                             next(err)
                         }else{
-                            res.json({success: true, message: null, user: user});
+                            res.json(user);
                         }
                     })
                 }
@@ -32,7 +31,7 @@ module.exports = function(app, passport){
             (err, user, result) => {
                 if (err) throw err;
                 if (!user) {
-                    res.json({success: false, message: result.message, field: 'name'});
+                    returnError(res, 400, 'name', result.message);
                 }else{
                     Role.findOne({ name : "Student"}, function(err,role) {
                         if(err) {
@@ -49,13 +48,13 @@ module.exports = function(app, passport){
                                         if (err) {
                                             next(err)
                                         } else {
-                                            res.json({success: true, message: null, user: user});
+                                            res.json(user);
                                         }
                                     })
                                 });
                             }
                             else{
-                                res.json({success: false, message: 'Required field.', field: 'role'});
+                                returnError(res, 400, 'role', 'Required field.');
                             }
                         }
                     });
@@ -72,6 +71,11 @@ module.exports = function(app, passport){
     app.post('/api/currentUser', (req, res) => {
         res.json(req.user);
     });
+    
+    function returnError(res, status, field, message) {
+        res.status(status);
+        res.json({message: message, field: field});
+    }
 };
 
 
