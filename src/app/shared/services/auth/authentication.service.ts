@@ -5,7 +5,6 @@ import { User }from "../../classes/user";
 import 'rxjs/add/operator/map'
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Rx';
-import {ServerResponse} from "../../classes/serverResult";
 import {FormGroup} from "@angular/forms";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 
@@ -34,12 +33,12 @@ export class AuthenticationService {
         }
     }
 
-    login(form : FormGroup) : Observable<ServerResponse> {
-            return this.http.post<ServerResponse>('/api/login', {name: form.controls['name'].value, password: form.controls['password'].value});
+    login(form : FormGroup) : Observable<User> {
+            return this.http.post<User>('/api/login', {name: form.controls['name'].value, password: form.controls['password'].value});
     }
 
-    signUp(name: string, password: string) : Observable<ServerResponse> {
-        return this.http.post<ServerResponse>('/api/signup', { name: name, password: password });
+    signUp(name: string, password: string) : Observable<User> {
+        return this.http.post<User>('/api/signup', { name: name, password: password });
     }
 
     logout(): void {

@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, Validators, FormBuilder} from '@angular/forms';
-import {AuthenticationService} from "../../shared/services/auth/authentication.service";
 import {Router} from "@angular/router";
 import {HttpErrorResponse} from "@angular/common/http";
+import {AuthenticationService} from "@shared/services/auth/authentication.service";
 
 @Component({
     templateUrl: 'login.component.html',
@@ -22,8 +22,8 @@ export class LoginComponent implements OnInit {
     }
 
     login():any {
-        if(this.form.valid) this.authenticationService.login(this.form).subscribe((response) => {
-            this.authenticationService.currentUser = response.user;
+        if(this.form.valid) this.authenticationService.login(this.form).subscribe((user) => {
+            this.authenticationService.currentUser = user;
             this.router.navigate(['']);
         },
             (err: HttpErrorResponse) => {

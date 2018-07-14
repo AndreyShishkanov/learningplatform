@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {VgAPI} from 'videogular2/core';
-import {AuthenticationService} from "../../shared/services/auth/authentication.service";
-import {Role} from "../../shared/classes/user";
-import {Attachment} from "../../shared/classes/attachment";
-import { HttpClient } from '@angular/common/http';
-import {FilesUploadService} from "../../shared/services/files/file-upload.service";
-import {SocketService} from '../../shared/services/websockets/websocket.service';
+import {AuthenticationService} from "@shared/services/auth/authentication.service";
+import {Role} from "@shared/classes/user";
+import {Attachment} from "@shared/classes/attachment";
+import {FilesUploadService} from "@shared/services/files/file-upload.service";
+import {SocketService} from '@shared/services/websockets/websocket.service';
 import {Subject} from "rxjs/Subject";
 import {FileUploader} from "ng2-file-upload";
 import {VideoService} from "./video.service";
