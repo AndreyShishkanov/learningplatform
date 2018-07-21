@@ -4,9 +4,11 @@ const multer = require('multer');
 
 module.exports = function(app, io){
 
+    const storageFolder = '/files_storage/';
+    
     const upload = multer({ storage: multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, app.locals.rootPath + '/files_storage/')
+            cb(null, app.locals.rootPath + storageFolder)
         },
         filename: function (req, file, cb) {
             cb(null, file.originalname)
@@ -14,72 +16,89 @@ module.exports = function(app, io){
     })}).single('file');
 
     io.on('connection', function (socket) {
-        socket.on('play', function (time) {
+        socket.on('play', (time) => {
             io.emit('play', time);
         });
-        socket.on('pause', function (time) {
+        socket.on('pause', (time) => {
             io.emit('pause', time);
         });
-        socket.on('setTime', function (time) {
+        socket.on('setTime', (time) => {
             io.emit('setTime', time);
         });
-        socket.on('rateChange', function (time) {
+        socket.on('rateChange', (time) => {
             io.emit('rateChange', time);
+        });
+        socket.on('changeMedia', (mediaId) => {
+            io.emit('changeMedia', mediaId);
         });
     });
 
-    app.post('/api/upload', function(req, res) {
+    app.post('/api/upload', async (req, res) => {
 
-        const dir = './files_storage/';
+        const dir = app.locals.rootPath + storageFolder;
         if (!fs.existsSync(dir)){
             fs.mkdirSync(dir);
         }
 
-        upload(req, res, function (err) {
+        upload(req, res, async (err) => {
             if (err) {
                 return res.end(err.toString());
             }
-            unselectAllMedia(() => {
-                let attachment = new Attachment({
-                    name: req.file.filename,
-                    href: '/files_storage/' + req.file.filename,
-                    type: req.file.mimetype,
-                    selected: true
-                });
-
-                attachment.save(function(err) {
-                    if (err) throw err;
-                    res.end();
-                  });
+    
+            let attachment = new Attachment({
+                name: req.file.filename,
+                href: storageFolder + req.file.filename,
+                type: req.file.mimetype,
+                selected: false
             });
+    
+            const media = await attachment.save();
+            
+            await selectMedia(media);
+    
+            res.end();
         });
     });
-    app.get('/api/getMediaList', function(req, res) {
-        Attachment.find({}, function(err, docs){
+    
+    app.get('/api/getMediaList', async (req, res) => {
+        const list = await Attachment.find({});
+        res.send(list);
+    });
+    
+    app.delete('/api/deleteMedia/:id', async (req, res) => {
+        const result = await deleteMedia(req.params.id);
+        
+        res.send(result);
+    });
+    
+    app.post('/api/setCurrentMedia', async (req, res) => {
+        const result = await selectMedia(req.body.attachment, res);
 
-            if(err) res.send(err);
-
-            res.send(docs);
-        });
+        res.send(result);
     });
-    app.post('/api/setCurrentMedia', function(req, res) {
-        unselectAllMedia(() => {
-            Attachment.findById(req.body.attachment._id, function(err, doc){
-                if(err) res.send(err);
-                    doc.selected = true;
-                    doc.save(function(err) {
-                        if (err)
-                            console.log('error');
-                        else
-                            res.send(null);
-                    });
-            });
-        });
-    });
-    function unselectAllMedia(callback) {
-        Attachment.update({selected: true},{selected: false},{multi: true}, function (err, raw) {
-            if (err) return handleError(err);
-            callback();
-        });
+    
+    async function deleteMedia(id){
+        const media = await Attachment.findById(id);
+        await media.remove();
+        if (media.selected){
+            const media = await Attachment.findOne();
+            await selectMedia(media);
+            return media;
+        }
+        return null;
+    }
+    
+    async function selectMedia(attachment){
+        await unselectAllMedia();
+        
+        const media = await Attachment.findById(attachment._id);
+        media.selected = true;
+        await media.save();
+    
+        io.emit('changeMedia');
+    }
+    
+    async function unselectAllMedia() {
+        await Attachment.update({selected: true},{selected: false},{multi: true});
     }
 };

@@ -1,4 +1,4 @@
-<vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="currentMedia">
+<vg-player (onPlayerReady)="onPlayerReady($event)" *ngIf="currentMedia" class="mb-3">
     <!--<vg-overlay-play></vg-overlay-play>-->
     <vg-buffering></vg-buffering>
 
@@ -27,22 +27,23 @@
         <source src="{{currentMedia.href}}" type="{{currentMedia.type}}">
     </video>
 </vg-player>
-<form *ngIf="authenticationService.currentUser?.role.hasControlAccess">
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label col-form-label-lg" for="file">File</label>
-        <div class="col-sm-7">
-          <input type="file" id="file" ng2FileSelect [uploader]="uploader" *ngIf="!uploader.isUploading" (change)="fileChangeEvent()"/>
-          <div class="progress" style="" *ngIf="uploader.isUploading">
-              <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
-          </div>
-        </div>
+
+<div class="form-group row" *ngIf="authenticationService.currentUser?.role.hasControlAccess">
+    <label class="col-sm-2 col-form-label col-form-label-lg" for="file">File</label>
+    <div class="col-sm-7">
+      <input type="file" id="file" ng2FileSelect [uploader]="uploader" *ngIf="!uploader.isUploading" (change)="fileChangeEvent()"/>
+      <div class="progress" style="" *ngIf="uploader.isUploading">
+          <div class="progress-bar" role="progressbar" [ngStyle]="{ 'width': uploader.progress + '%' }"></div>
+      </div>
     </div>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label col-form-label-lg" for="video">Current video</label>
-        <div class="col-sm-7">
-            <select id="video" class="form-control" (change)="mediaChangeEvent($event.target.value)">
-                <option *ngFor="let attachment of attachments; let i = index" [value]="i" [selected]="attachment.selected">{{attachment.name}}</option>
-            </select>
+</div>
+
+<ul class="list-group" *ngIf="authenticationService.currentUser?.role.hasControlAccess">
+    <li *ngFor="let attachment of attachments" [class.active]="attachment === currentMedia" class="list-group-item d-flex justify-content-between align-items-center">
+        {{attachment.name}}
+        <div>
+            <button type="button" (click)="mediaChangeEvent(attachment)" class="btn btn-info btn-sm">Select</button>
+            <button type="button" (click)="mediaDeleteEvent(attachment)" class="btn btn-danger btn-sm ml-2">Delete</button>
         </div>
-    </div>
-</form>
+    </li>
+</ul>

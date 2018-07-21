@@ -26,38 +26,36 @@ module.exports = function(app, passport){
         )(req, res, next);
     });
 
-    app.post('/api/signup', (req, res, next) => {
+    app.post('/api/signup', async (req, res, next) => {
         passport.authenticate('signup',
-            (err, user, result) => {
+            async (err, user, result) => {
                 if (err) throw err;
                 if (!user) {
                     returnError(res, 400, 'name', result.message);
                 }else{
-                    Role.findOne({ name : "Student"}, function(err,role) {
-                        if(err) {
-                            return done(err);
-                        }else {
-                            if(role){
-
-                                user.role = role;
-
-                                user.save(function (err) {
-                                    if (err) throw err;
-
-                                    req.logIn(user, err => {
-                                        if (err) {
-                                            next(err)
-                                        } else {
-                                            res.json(user);
-                                        }
-                                    })
-                                });
-                            }
-                            else{
-                                returnError(res, 400, 'role', 'Required field.');
-                            }
+                    try{
+                        const role = await Role.findOne({ name : "Student"});
+                        if (role){
+                            user.role = role;
+                            user.save(function (err) {
+                                if (err) throw err;
+            
+                                req.logIn((user, err) => {
+                                    if (err) {
+                                        next(err)
+                                    } else {
+                                        res.json(user);
+                                    }
+                                })
+                            });
                         }
-                    });
+                        else{
+                            returnError(res, 400, 'role', 'Required field.');
+                        }
+                    }
+                    catch (err) {
+                        return done(err);
+                    }
                 }
             }
         )(req, res, next);

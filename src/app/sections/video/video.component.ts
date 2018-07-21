@@ -3,8 +3,6 @@ import {VgAPI} from 'videogular2/core';
 import {AuthenticationService} from "@shared/services/auth/authentication.service";
 import {Role} from "@shared/classes/user";
 import {Attachment} from "@shared/classes/attachment";
-import {FilesUploadService} from "@shared/services/files/file-upload.service";
-import {SocketService} from '@shared/services/websockets/websocket.service';
 import {Subject} from "rxjs/Subject";
 import {FileUploader} from "ng2-file-upload";
 import {VideoService} from "./video.service";
@@ -24,7 +22,7 @@ export class VideoComponent implements OnInit, OnDestroy{
 
     private unsubscribe = new Subject();
 
-    constructor(public authenticationService: AuthenticationService, private videoService: VideoService, private fileUploadService : FilesUploadService, private socket : SocketService) {
+    constructor(public authenticationService: AuthenticationService, private videoService: VideoService) {
         this.getMedias();
         this.currentRole = this.authenticationService.currentUser.role;
     }
@@ -36,20 +34,32 @@ export class VideoComponent implements OnInit, OnDestroy{
     getMedias():void{
         this.currentMedia = null;
         this.videoService.getMedias()
-            .subscribe( (response : Attachment[]) =>  {
-                this.attachments = response;
-                this.currentMedia = response.filter(x=>x.selected)[0];
+            .subscribe( (attachments : Attachment[]) =>  {
+                this.attachments = attachments;
+                this.currentMedia = attachments.filter(x=>x.selected)[0];
             });
     }
 
     fileChangeEvent() {
         this.uploader.uploadAll();
     }
-    mediaChangeEvent(i: number) {
+    
+    mediaChangeEvent(attachment: Attachment) {
+        if(this.currentMedia === attachment) return;
+        
         this.currentMedia = null;
         
-        this.videoService.setCurrentMedia(this.attachments[i]).subscribe(() => {
-            this.currentMedia = this.attachments[i];
+        this.videoService.setCurrentMedia(attachment).subscribe(() => {
+            this.currentMedia = attachment;
+        });
+    }
+    
+    mediaDeleteEvent(attachment: Attachment) {
+        if(attachment == this.currentMedia) this.currentMedia = null;
+        
+        this.videoService.deleteMedia(attachment).subscribe((mediafile) => {
+            this.attachments.splice(this.attachments.indexOf(attachment), 1);
+            if(mediafile) this.currentMedia = this.attachments.find( x => x._id == mediafile._id);
         });
     }
 
@@ -58,10 +68,10 @@ export class VideoComponent implements OnInit, OnDestroy{
     }
 
     play() : void{
-        this.socket.emit('play', this.api.currentTime);
+        this.videoService.play(this.api.currentTime);
     }
     pause() : void{
-        this.socket.emit('pause', this.api.currentTime);
+        this.videoService.pause(this.api.currentTime);
     }
 
     onPlayerReady(api:VgAPI) {
@@ -73,35 +83,37 @@ export class VideoComponent implements OnInit, OnDestroy{
             }
         );
 
-        this.socket.on('pause').takeUntil(this.unsubscribe).subscribe((time:number)=>{
+        this.videoService.onPause().takeUntil(this.unsubscribe).subscribe((time:number)=>{
             this.api.getDefaultMedia().currentTime = time;
             this.api.pause();
             this.paused = true;
         });
 
-        this.socket.on('play').takeUntil(this.unsubscribe).subscribe((time:number)=>{
+        this.videoService.onPlay().takeUntil(this.unsubscribe).subscribe((time:number)=>{
             this.api.getDefaultMedia().currentTime = time;
             this.api.play();
             this.paused = false;
         });
 
         if(this.currentRole.hasControlAccess){
-            this.api.subscriptions.seeked.takeUntil(this.unsubscribe).subscribe(
-                () => {
-                    this.socket.emit('setTime', this.api.currentTime);
+            this.api.subscriptions.seeked.takeUntil(this.unsubscribe).subscribe(() => {
+                    this.videoService.setTime(this.api.currentTime);
                 }
             );
-            this.api.subscriptions.rateChange.takeUntil(this.unsubscribe).subscribe(
-                () => {
-                    this.socket.emit('rateChange', this.api.playbackRate);
+            this.api.subscriptions.rateChange.takeUntil(this.unsubscribe).subscribe(() => {
+                    this.videoService.changeRate(this.api.playbackRate);
                 }
             );
         }else{
-            this.socket.on('setTime').takeUntil(this.unsubscribe).subscribe((time:number)=>{
+            this.videoService.onChangeMedia().takeUntil(this.unsubscribe).subscribe(() => {
+                this.getMedias();
+            });
+            
+            this.videoService.onSetTime().takeUntil(this.unsubscribe).subscribe((time:number) => {
                 this.api.currentTime = time;
             });
 
-            this.socket.on('rateChange').takeUntil(this.unsubscribe).subscribe((playbackRate:number)=>{
+            this.videoService.onRateChange().takeUntil(this.unsubscribe).subscribe((playbackRate:number) => {
                 this.api.playbackRate = playbackRate;
             });
         }

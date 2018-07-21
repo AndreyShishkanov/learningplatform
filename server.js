@@ -57,7 +57,7 @@ io.use(passportSocketIo.authorize({
     store:        sessionStore
 }));
 
-io.use(function(socket, next){
+io.use((socket, next) => {
     socket.user = socket.client.request.user;
     return next();
 });
@@ -67,12 +67,13 @@ require('./server/video')(app, io);
 require('./server/explaining')(app, io);
 require('./server/data')(app);
 
-app.all('*', function (req, res) {
-    res.sendFile(path.resolve('public/dist/index.html'));
-});
+app.all('*', (req, res) => res.sendFile(path.resolve('public/dist/index.html')));
 
-server.listen(port, function () {
-    console.log('Listening on port ' + port);
+server.listen(port, () => console.log('Listening on port ' + port));
+
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    res.send(err);
 });
 
 module.exports = app;
