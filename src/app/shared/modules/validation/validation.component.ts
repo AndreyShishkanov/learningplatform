@@ -3,33 +3,25 @@ import { FormControl } from '@angular/forms';
 
 @Component({
     selector: 'validation-messages',
-    template: `<div class="invalid-feedback" [hidden]="!(control.touched && control.invalid)" *ngIf="errorMessage !== null">{{errorMessage}}</div>`
+    template: `<div *ngIf="this.control.touched && this.control.invalid" class="invalid-feedback">{{errorMessage}}</div>`
 })
 export class ValidationComponent {
-
+    config = {
+        'required': 'This field is required!'
+    };
     @Input() control: FormControl;
     constructor() { }
 
-    getValidatorErrorMessage(validatorName: string, validatorValue?: any) {
-        let config = {
-            'required': 'This field is required!',
-            'invalidPassword': 'Invalid password. Password must be at least 6 characters long, and contain a number.',
-            'minlength': `Minimum length ${validatorValue.requiredLength}`
-        };
-        if(config.hasOwnProperty(validatorName)){
-            return config[validatorName];
+    getValidatorErrorMessage(validatorName: string) {
+        if(this.config.hasOwnProperty(validatorName)){
+            return this.config[validatorName];
         }else{
             return validatorName;
         }
     }
 
     get errorMessage() {
-        for (let propertyName in this.control.errors) {
-            if (this.control.errors.hasOwnProperty(propertyName) && this.control.touched) {
-                return this.getValidatorErrorMessage(propertyName, this.control.errors[propertyName]);
-            }
-        }
-
-        return null;
+        if (!this.control.errors) return null;
+        return this.getValidatorErrorMessage(Object.keys(this.control.errors)[0]);
     }
 }

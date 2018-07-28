@@ -1,22 +1,26 @@
 {
-  "/api": {
-    "target": "http://localhost:5000",
-    "secure": false
-  },
-  "/public": {
-    "target": "http://localhost:5000",
-    "secure": false
-  },
-  "/node_modules": {
-    "target": "http://localhost:5000",
-    "secure": false
-  },
-  "/socket.io": {
-    "target": "http://localhost:5000",
-    "secure": false
-  },
-  "/files_storage": {
-    "target": "http://localhost:5000",
-    "secure": false
-  }
+    "/api": {
+        "target": "http://localhost:5000",
+        "secure": false
+    },
+    "/public": {
+        "target": "http://localhost:5000",
+        "secure": false
+    },
+    "/node_modules": {
+        "target": "http://localhost:5000",
+        "secure": false
+    },
+    "/socket.io": {
+        "target": "http://localhost:5000",
+        "secure": false
+    },
+    "/files_storage": {
+        "target": "http://localhost:5000",
+        "secure": false
+    },
+    "/favicon": {
+        "target": "http://localhost:5000",
+        "secure": false
+    }
 }

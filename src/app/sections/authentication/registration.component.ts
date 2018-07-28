@@ -45,7 +45,6 @@ export class RegistrationComponent implements OnInit {
     }
 
     matchPassword(control: FormControl) : any {
-
         let password = control.get('password').value;
         let confirmPassword = control.get('confirmPassword').value;
         if(password != confirmPassword) {
