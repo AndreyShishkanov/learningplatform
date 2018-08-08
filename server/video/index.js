@@ -80,6 +80,9 @@ module.exports = function(app, io){
     async function deleteMedia(id){
         const media = await Attachment.findById(id);
         await media.remove();
+    
+        fs.unlinkSync(app.locals.rootPath + media.href);
+        
         if (media.selected){
             const media = await Attachment.findOne();
             await selectMedia(media);
@@ -89,6 +92,8 @@ module.exports = function(app, io){
     }
     
     async function selectMedia(attachment){
+        if(attachment === null) return;
+        
         await unselectAllMedia();
         
         const media = await Attachment.findById(attachment._id);
