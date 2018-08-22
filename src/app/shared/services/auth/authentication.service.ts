@@ -2,11 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { User }from "../../classes/user";
-import 'rxjs/add/operator/map'
-import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Rx';
-import {FormGroup} from "@angular/forms";
-import {ReplaySubject} from "rxjs/ReplaySubject";
+import { ReplaySubject } from "rxjs/ReplaySubject";
 
 @Injectable({
     providedIn: "root"
@@ -33,12 +30,12 @@ export class AuthenticationService {
         }
     }
 
-    login(form : FormGroup) : Observable<User> {
-            return this.http.post<User>('/api/login', {name: form.controls['name'].value, password: form.controls['password'].value});
+    login(data : any) : Observable<User> {
+        return this.http.post<User>('/api/login', data);
     }
 
-    signUp(name: string, password: string) : Observable<User> {
-        return this.http.post<User>('/api/signup', { name: name, password: password });
+    signUp(data: any) : Observable<User> {
+        return this.http.post<User>('/api/signup', data);
     }
 
     logout(): void {

@@ -2,7 +2,7 @@ import { ModuleWithProviders} from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { HomeComponent } from "./sections/home/home.component";
 import { PageNotFoundComponent } from "./not-found.component";
-import { AuthGuard } from './shared/services/auth/authentication.guard';
+import { AuthGuard } from '@shared/services/auth/authentication.guard';
 
 
 const routes: Routes =[

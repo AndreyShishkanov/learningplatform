@@ -22,7 +22,7 @@ export class LoginComponent implements OnInit {
     }
 
     login():any {
-        if(this.form.valid) this.authenticationService.login(this.form).subscribe((user) => {
+        if(this.form.valid) this.authenticationService.login(this.form.value).subscribe((user) => {
             this.authenticationService.currentUser = user;
             this.router.navigate(['']);
         },

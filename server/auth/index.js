@@ -34,7 +34,7 @@ module.exports = function(app, passport){
                     returnError(res, 400, 'name', result.message);
                 }else{
                     try{
-                        const role = await Role.findOne({ name : "Student"});
+                        const role = await Role.findOne({ name : req.body.role});
                         if (role){
                             user.role = role;
                             user.save(function (err) {

@@ -33,7 +33,7 @@ export class RegistrationComponent implements OnInit {
 
     onSubmit() {
         if(this.form.valid){
-            this.authenticationService.signUp(this.form.controls['name'].value, this.form.controls['password'].value).subscribe( (user) =>  {
+            this.authenticationService.signUp(this.form.value).subscribe( (user) =>  {
                 this.authenticationService.currentUser = user;
                 this.router.navigate(['']);
             },
