@@ -1,6 +1,6 @@
 import { ModuleWithProviders } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {ExplainingComponent} from "./explaining.component";
+import {ExplainingComponent} from './explaining.component';
 
 const routes: Routes = [
     { path: '', component: ExplainingComponent }

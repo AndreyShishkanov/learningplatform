@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-    selector: 'validation-messages',
+    selector: 'app-validation-messages',
     template: `<div *ngIf="this.formControl.touched && this.formControl.invalid" class="invalid-feedback">{{errorMessage}}</div>`
 })
 export class ValidationComponent {
@@ -18,13 +18,13 @@ export class ValidationComponent {
             }
         });
     }
-    
+
     formControl: FormControl;
-    
+
     errorMessage: string;
-    
+
     constructor() { }
-    
+
     getValidatorErrorMessage(validatorName: string) {
         if (this.config.hasOwnProperty(validatorName)){
             return this.config[validatorName];

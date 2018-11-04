@@ -5,11 +5,11 @@
     <vg-controls>
         <div class="icon play-pause" (click)="playOrPause()" [ngClass]="{'vg-icon-play_arrow': paused, 'vg-icon-pause': !paused}"></div>
         <!--<vg-play-pause></vg-play-pause>-->
-        <vg-playback-button *ngIf="currentRole.hasControlAccess"></vg-playback-button>
+        <vg-playback-button *ngIf="authenticationService.currentUser?.role.hasControlAccess"></vg-playback-button>
 
         <vg-time-display vgProperty="current" vgFormat="mm:ss"></vg-time-display>
 
-        <vg-scrub-bar *ngIf="currentRole.hasControlAccess">
+        <vg-scrub-bar *ngIf="authenticationService.currentUser?.role.hasControlAccess">
             <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
             <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
         </vg-scrub-bar>

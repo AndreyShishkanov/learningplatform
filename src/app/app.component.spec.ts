@@ -1,11 +1,12 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from "@angular/core";
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 describe('AppComponent', () => {
-    
+
     let fixture: ComponentFixture<AppComponent>;
     let compiled: any;
-    
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
@@ -15,11 +16,11 @@ describe('AppComponent', () => {
                 CUSTOM_ELEMENTS_SCHEMA
             ]
         }).compileComponents();
-    
+
         fixture = TestBed.createComponent(AppComponent);
         compiled = fixture.debugElement.nativeElement;
     });
-    
+
     it('should create the app', () => {
         const app = fixture.debugElement.componentInstance;
         expect(app).toBeTruthy();

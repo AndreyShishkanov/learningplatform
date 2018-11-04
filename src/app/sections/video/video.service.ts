@@ -1,20 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Rx';
-import { HttpClient } from "@angular/common/http";
-import {Attachment} from "../../shared/classes/attachment";
-import {SocketService} from "@shared/services/websockets/websocket.service";
+import { Observable } from 'rxjs/Observable';
+import { HttpClient } from '@angular/common/http';
+import { Attachment } from '@shared/classes/attachment';
+import { SocketService } from '@shared/services/websockets/websocket.service';
 
 @Injectable()
 export class VideoService {
-    
-    constructor(private http: HttpClient, private socket : SocketService) {
+
+    constructor(private http: HttpClient, private socket: SocketService) {
     }
-    
+
     getMedias(): Observable<Attachment[]>{
         return this.http.get<Attachment[]>('/api/getMediaList');
     }
     setCurrentMedia(attachment: Attachment): Observable<any>{
-        return this.http.post("/api/setCurrentMedia", {attachment: attachment});
+        return this.http.post('/api/setCurrentMedia', {attachment: attachment});
     }
     deleteMedia(attachment: Attachment): Observable<any>{
         return this.http.delete<Attachment>(`/api/deleteMedia/${attachment._id}`);

@@ -1,16 +1,14 @@
-import {TestBed, ComponentFixture, async, fakeAsync, tick, inject} from '@angular/core/testing';
-import { HomeComponent } from "./home.component";
-import {AuthenticationService} from "@shared/services/auth/authentication.service";
-import {RouterTestingModule} from "@angular/router/testing";
-import 'rxjs/add/observable/of';
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
+import {TestBed, ComponentFixture, inject} from '@angular/core/testing';
+import { HomeComponent } from './home.component';
+import {AuthenticationService} from '@shared/services/auth/authentication.service';
+import {RouterTestingModule} from '@angular/router/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 
 describe('HomeComponent', () => {
     let component: HomeComponent;
     let fixture: ComponentFixture<HomeComponent>;
     let authService: AuthenticationService;
-    let spy: any;
-    
+
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -27,26 +25,30 @@ describe('HomeComponent', () => {
         fixture = TestBed.createComponent(HomeComponent);
         component = fixture.componentInstance;
     });
-    
+
     afterEach(() => {
         authService = null;
         component = null;
     });
-    
+
     it('should create the home component', () => {
         const app = fixture.debugElement.componentInstance;
         expect(app).toBeTruthy();
     });
-    it('should get user name', inject([HttpTestingController, AuthenticationService], (httpMock: HttpTestingController, service: AuthenticationService) => {
+
+    it('should get user name',
+        inject(
+            [HttpTestingController, AuthenticationService],
+            (httpMock: HttpTestingController, service: AuthenticationService) => {
         const mockReq = httpMock.expectOne('/api/currentUser');
-    
         mockReq.flush({name: 'userName'});
-    
-        
-        
+
         component.ngOnInit();
+
         expect(component.name).toBe('userName');
-    
+        fixture.detectChanges();
+
+
         httpMock.verify();
     }));
 });

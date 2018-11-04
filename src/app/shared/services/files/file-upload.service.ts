@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Observable, Observer } from 'rxjs/Rx';
+import { Observable } from 'rxjs/Observable';
+import { Observer } from 'rxjs/Observer';
 
 @Injectable()
 export class FilesUploadService {
 
     public upload (url: string, files: File[]): Observable<any> {
-        return Observable.create((observer : Observer<any>) => {
-            let formData: FormData = new FormData(),
+        return Observable.create((observer: Observer<any>) => {
+            const formData: FormData = new FormData(),
                 xhr: XMLHttpRequest = new XMLHttpRequest();
 
             for (let i = 0; i < files.length; i++) {
-                formData.append("file", files[i], files[i].name);
+                formData.append('file', files[i], files[i].name);
             }
 
             xhr.onreadystatechange = () => {
